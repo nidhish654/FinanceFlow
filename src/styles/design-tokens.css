@@ -1,0 +1,11 @@
+:root {
+    --radius: 12px;
+
+    --sidebar-width: 280px;
+
+    --sidebar-width-collapsed: 72px;
+
+    --navbar-height: 64px;
+
+    --page-max-width: 1600px;
+}
