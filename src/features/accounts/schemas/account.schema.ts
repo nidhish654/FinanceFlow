@@ -1,4 +1,4 @@
-import { AccountType, Currency } from "@prisma/client";
+import { AccountType } from "@prisma/client";
 import { z } from "zod";
 
 export const accountSchema = z.object({
@@ -9,8 +9,6 @@ export const accountSchema = z.object({
         .max(50, "Account name cannot exceed 50 characters."),
 
     type: z.nativeEnum(AccountType),
-
-    currency: z.nativeEnum(Currency),
 
     openingBalance: z.coerce
         .number()

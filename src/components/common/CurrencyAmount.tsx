@@ -11,7 +11,14 @@ export default function CurrencyAmount({
     minimumFractionDigits = 2,
     maximumFractionDigits = 2,
 }: CurrencyAmountProps) {
-    const formattedAmount = new Intl.NumberFormat("en-IN", {
+    const locale =
+        currency === "JPY"
+            ? "ja-JP"
+            : currency === "INR"
+                ? "en-IN"
+                : "en-US";
+
+    const formattedAmount = new Intl.NumberFormat(locale, {
         style: "currency",
         currency,
         minimumFractionDigits,

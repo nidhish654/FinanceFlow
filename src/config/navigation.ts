@@ -6,6 +6,7 @@ import {
   Target,
   ChartColumn,
   Settings,
+  BriefcaseBusiness
 } from "lucide-react";
 
 export const navigation = [
@@ -44,6 +45,12 @@ export const navigation = [
     href: "/analytics",
     icon: ChartColumn,
     group: "main",
+  },
+  {
+    title: "Finance Profiles",
+    href: "/finance-profile",
+    icon: BriefcaseBusiness,
+    group: "bottom",
   },
   {
     title: "Settings",

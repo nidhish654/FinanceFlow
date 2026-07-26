@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-    const accounts = await prisma.account.findMany({
+    const accounts = await prisma.financeAccount.findMany({
         include: {
             financeProfile: true,
         },

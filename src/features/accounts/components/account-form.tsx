@@ -1,6 +1,6 @@
 "use client";
 
-import { AccountType, Currency } from "@prisma/client";
+import { AccountType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
@@ -11,7 +11,6 @@ import {
 
 import {
     ACCOUNT_TYPE_OPTIONS,
-    CURRENCY_OPTIONS,
 } from "../constants/account-options";
 
 import { Button } from "@/components/ui/button";
@@ -20,10 +19,14 @@ import { Input } from "@/components/ui/input";
 import { FormField, SelectField } from "@/components/forms";
 
 interface AccountFormProps {
+    defaultValues?: Partial<AccountFormInput>;
+    submitLabel?: string;
     onSubmit: (values: AccountFormInput) => Promise<void>;
 }
 
 export default function AccountForm({
+    defaultValues,
+    submitLabel = "Create Account",
     onSubmit,
 }: AccountFormProps) {
     const form = useForm<AccountFormInput>({
@@ -32,8 +35,8 @@ export default function AccountForm({
         defaultValues: {
             name: "",
             type: AccountType.CASH,
-            currency: Currency.INR,
             openingBalance: 0,
+            ...defaultValues,
         },
     });
 
@@ -85,25 +88,6 @@ export default function AccountForm({
                 )}
             />
 
-            <Controller
-                control={control}
-                name="currency"
-                render={({ field }) => (
-                    <FormField
-                        label="Currency"
-                        required
-                        error={errors.currency?.message}
-                    >
-                        <SelectField
-                            value={field.value}
-                            onValueChange={field.onChange}
-                            placeholder="Select currency"
-                            options={CURRENCY_OPTIONS}
-                        />
-                    </FormField>
-                )}
-            />
-
             <FormField
                 label="Opening Balance"
                 required
@@ -124,8 +108,8 @@ export default function AccountForm({
                 disabled={isSubmitting}
             >
                 {isSubmitting
-                    ? "Creating..."
-                    : "Create Account"}
+                    ? "Saving..."
+                    : submitLabel}
             </Button>
         </form>
     );

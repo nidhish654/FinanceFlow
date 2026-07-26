@@ -1,13 +1,28 @@
-export default function DashboardPage() {
-    return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold">
-                Dashboard
-            </h1>
+import PageHeader from "@/components/common/PageHeader";
 
-            <div className="rounded-xl border p-6">
-                Dashboard Content
-            </div>
-        </div>
+import DashboardStats from "@/features/dashboard/components/dashboard-stats";
+import QuickActions from "@/features/dashboard/components/quick-actions";
+import RecentActivity from "@/features/dashboard/components/recent-activity";
+import { getDashboardData } from "@/features/dashboard/services/dashboard.service";
+
+export default async function DashboardPage() {
+    const data = await getDashboardData();
+
+    return (
+        <main className="space-y-8">
+            <PageHeader
+                title="Dashboard"
+                description="Here's an overview of your finances."
+            />
+
+            <DashboardStats
+                totalBalance={data.totalBalance}
+                accountCount={data.accountCount}
+            />
+
+            <QuickActions />
+
+            <RecentActivity />
+        </main>
     );
 }

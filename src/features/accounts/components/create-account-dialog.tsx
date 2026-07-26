@@ -51,6 +51,7 @@ export default function CreateAccountDialog() {
                 </DialogHeader>
 
                 <AccountForm
+                    submitLabel="Create Account"
                     onSubmit={handleCreateAccount}
                 />
             </DialogContent>

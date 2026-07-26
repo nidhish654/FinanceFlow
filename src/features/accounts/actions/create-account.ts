@@ -8,6 +8,8 @@ import {
     AccountFormInput,
 } from "../schemas/account.schema";
 
+import { requireActiveFinanceProfile } from "@/features/finance-profile/services";
+
 export async function createAccount(values: AccountFormInput) {
     const parsed = accountSchema.safeParse(values);
 
@@ -19,7 +21,7 @@ export async function createAccount(values: AccountFormInput) {
         };
     }
 
-    const financeProfile = await prisma.financeProfile.findFirst();
+    const financeProfile = await requireActiveFinanceProfile();;
 
     if (!financeProfile) {
         return {
@@ -28,9 +30,10 @@ export async function createAccount(values: AccountFormInput) {
         };
     }
 
-    await prisma.account.create({
+    await prisma.financeAccount.create({
         data: {
             ...parsed.data,
+            currency: financeProfile.baseCurrency,
             financeProfileId: financeProfile.id,
         },
     });
