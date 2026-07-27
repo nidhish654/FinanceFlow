@@ -35,8 +35,8 @@ export const navigation = [
     group: "main",
   },
   {
-    title: "Budgets",
-    href: "/budgets",
+    title: "Planning",
+    href: "/planning",
     icon: Target,
     group: "main",
   },

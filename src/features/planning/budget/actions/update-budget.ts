@@ -46,14 +46,19 @@ export async function updateBudget(
 
     const data = parsed.data;
 
+    // Convert "Overall Budget" ("") to null for Prisma
+    const categoryId =
+        data.categoryId === ""
+            ? null
+            : data.categoryId;
+
     const duplicateBudget =
         await prisma.budget.findFirst({
             where: {
                 financeProfileId:
                     financeProfile.id,
 
-                categoryId:
-                    data.categoryId,
+                categoryId,
 
                 startDate:
                     data.startDate,
@@ -80,8 +85,7 @@ export async function updateBudget(
             id: budgetId,
         },
         data: {
-            categoryId:
-                data.categoryId,
+            categoryId,
 
             amount: data.amount,
 

@@ -8,13 +8,10 @@ import { toast } from "sonner";
 
 import {
     Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 
+import BudgetDialog from "./budget-dialog";
 import BudgetForm from "./budget-form";
 
 import { updateBudget } from "../actions/update-budget";
@@ -44,7 +41,8 @@ export default function EditBudgetDialog({
 }: EditBudgetDialogProps) {
     const router = useRouter();
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] =
+        useState(false);
 
     async function handleSubmit(
         values: BudgetFormData
@@ -88,20 +86,10 @@ export default function EditBudgetDialog({
                 {trigger}
             </DialogTrigger>
 
-            <DialogContent className="max-w-3xl">
-
-                <DialogHeader>
-
-                    <DialogTitle>
-                        Edit Budget
-                    </DialogTitle>
-
-                    <DialogDescription>
-                        Update your budget details.
-                    </DialogDescription>
-
-                </DialogHeader>
-
+            <BudgetDialog
+                title="Edit Budget"
+                description="Update your budget details."
+            >
                 <BudgetForm
                     defaultValues={
                         defaultValues
@@ -111,11 +99,11 @@ export default function EditBudgetDialog({
                         categoryOptions
                     }
                     submitLabel="Save Changes"
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        handleSubmit
+                    }
                 />
-
-            </DialogContent>
-
+            </BudgetDialog>
         </Dialog>
     );
 }

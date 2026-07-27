@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import ViewSelector from "@/components/common/ViewSelector";
+import CardSelector from "@/components/common/CardSelector";
 import FinanceProfileCard from "./finance-profile-card";
 
 import { Currency, FinanceProfileStatus } from "@prisma/client";
@@ -35,15 +35,21 @@ export default function FinanceProfilesView({
 
     return (
         <div className="space-y-6">
-            <ViewSelector
-                firstLabel="Active"
-                secondLabel="Archived"
-                firstCount={activeProfiles.length}
-                secondCount={archivedProfiles.length}
-                value={view === "active" ? "first" : "second"}
-                onValueChange={(value) =>
-                    setView(value === "first" ? "active" : "archived")
-                }
+            <CardSelector
+                items={[
+                    {
+                        value: "active",
+                        label: "Active",
+                        count: activeProfiles.length,
+                    },
+                    {
+                        value: "archived",
+                        label: "Archived",
+                        count: archivedProfiles.length,
+                    },
+                ]}
+                value={view}
+                onValueChange={setView}
             />
 
             {profiles.length === 0 ? (

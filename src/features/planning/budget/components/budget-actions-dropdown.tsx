@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
-    MoreHorizontal,
+    MoreVertical,
     Pencil,
     Archive,
     RotateCcw,
@@ -118,7 +118,7 @@ export default function BudgetActionsDropdown({
                         variant="ghost"
                         size="icon"
                     >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                     </Button>
 
                 </DropdownMenuTrigger>

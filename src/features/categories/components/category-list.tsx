@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Category, CategoryType } from "@prisma/client";
 
 import CategoryCard from "./category-card";
-import ViewSelector from "@/components/common/ViewSelector";
+import CardSelector from "@/components/common/CardSelector";
 
 interface CategoryListProps {
     categories: Category[];
@@ -91,23 +91,21 @@ export default function CategoryList({
 
     return (
         <div className="space-y-12">
-            <ViewSelector
-                firstLabel="Active"
-                secondLabel="Archived"
-                firstCount={activeCategories.length}
-                secondCount={archivedCategories.length}
-                value={
-                    view === "active"
-                        ? "first"
-                        : "second"
-                }
-                onValueChange={(value) =>
-                    setView(
-                        value === "first"
-                            ? "active"
-                            : "archived"
-                    )
-                }
+            <CardSelector
+                items={[
+                    {
+                        value: "active",
+                        label: "Active",
+                        count: activeCategories.length,
+                    },
+                    {
+                        value: "archived",
+                        label: "Archived",
+                        count: archivedCategories.length,
+                    },
+                ]}
+                value={view}
+                onValueChange={setView}
             />
 
             {displayedCategories.length === 0 ? (

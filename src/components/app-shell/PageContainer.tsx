@@ -9,7 +9,7 @@ export function PageContainer({
 }: PageContainerProps) {
     return (
         <main className="flex-1 overflow-y-auto">
-            <div className="mx-auto w-full max-w-[1600px] px-8 py-8">
+            <div className="mx-auto w-full max-w-[1600px] px-8 py-4">
                 {children}
             </div>
         </main>

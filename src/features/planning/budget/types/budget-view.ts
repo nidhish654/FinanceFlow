@@ -31,6 +31,10 @@ export interface BudgetView {
 
     remainingAmount: number;
 
+    isExceeded: boolean;
+
+    overBudgetAmount: number;
+
     isTypical: boolean;
 
     title: string;
