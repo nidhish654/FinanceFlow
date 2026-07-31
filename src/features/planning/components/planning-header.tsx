@@ -17,7 +17,7 @@ export default function PlanningHeader({
     return (
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-1.5">
-                <h1 className="text-4xl font-bold tracking-tight">
+                <h1 className="text-3xl font-bold tracking-tight">
                     Planning
                 </h1>
 

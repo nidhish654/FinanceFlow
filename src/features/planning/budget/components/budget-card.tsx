@@ -124,10 +124,13 @@ export default function BudgetCard({
             )}
         >
             <CardContent className="
-                space-y-4
-                p-5
+                space-y-3
+                px-5
+                py-1
+
                 sm:space-y-5
-                sm:p-6
+                sm:px-6
+                sm:py-5
             ">
 
                 {/* ---------- Header ---------- */}

@@ -10,6 +10,13 @@ import BudgetCardList from "./budget-card-list";
 import { BudgetView } from "../types/budget-view";
 import { Separator } from "@/components/ui/separator";
 
+type BudgetPeriodFilter =
+    | "all"
+    | "monthly"
+    | "weekly"
+    | "yearly"
+    | "custom";
+
 interface BudgetPageContentProps {
     budgets: BudgetView[];
 
@@ -23,50 +30,64 @@ export default function BudgetPageContent({
     currency,
     categoryOptions,
 }: BudgetPageContentProps) {
-    const [view, setView] = useState<
-        "active" | "archived"
-    >("active");
-    const activeBudgets = useMemo(
-        () =>
-            budgets.filter(
-                (budget) => !budget.archived
-            ),
-        [budgets]
-    );
+    const [periodFilter, setPeriodFilter] =
+        useState<BudgetPeriodFilter>("all");
 
-    const archivedBudgets = useMemo(
-        () =>
-            budgets.filter(
-                (budget) => budget.archived
-            ),
-        [budgets]
-    );
+    const visibleBudgets = useMemo(() => {
+        if (periodFilter === "all") {
+            return budgets;
+        }
 
-    const visibleBudgets =
-        view === "active"
-            ? activeBudgets
-            : archivedBudgets;
+        return budgets.filter(
+            (budget) =>
+                budget.period.toLowerCase() ===
+                periodFilter
+        );
+    }, [budgets, periodFilter]);
 
     return (
         <div className="space-y-4">
-
             <Separator />
+            <CardSelector
+                variant="compact"
+                items={[
+                    {
+                        value: "all",
+                        label: "All",
+                    },
+                    {
+                        value: "monthly",
+                        label: "Monthly",
+                    },
+                    {
+                        value: "weekly",
+                        label: "Weekly",
+                    },
+                    {
+                        value: "yearly",
+                        label: "Yearly",
+                    },
+                    {
+                        value: "custom",
+                        label: "Custom",
+                    },
+                ]}
+                value={periodFilter}
+                onValueChange={setPeriodFilter}
+            />
+
+            {/* <Separator /> */}
 
             {visibleBudgets.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center">
-
                     <h3 className="text-lg font-semibold">
-                        {view === "active"
-                            ? "No Active Budgets"
-                            : "No Archived Budgets"}
+                        No Budgets Found
                     </h3>
 
                     <p className="mt-2 text-sm text-muted-foreground">
-                        {view === "active"
-                            ? "Create your first budget to start tracking your spending."
-                            : "Archived budgets will appear here."}
+                        No budgets match the selected
+                        period.
                     </p>
-
                 </div>
             ) : (
                 <BudgetCardList
@@ -75,7 +96,6 @@ export default function BudgetPageContent({
                     categoryOptions={categoryOptions}
                 />
             )}
-
         </div>
     );
 }

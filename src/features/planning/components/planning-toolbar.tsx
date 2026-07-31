@@ -3,9 +3,10 @@
 import CardSelector from "@/components/common/CardSelector";
 
 import CreateBudgetDialog from "../budget/components/create-budget-dialog";
+import AddGoalDialog from "../goal/components/add-goal-dialog";
 
 import { SelectOption } from "@/components/forms/SelectField";
-import { BudgetViewState } from "./planning-content";
+import { PlanningViewState } from "./planning-content";
 
 import { Card } from "@/components/ui/card";
 
@@ -17,10 +18,10 @@ type PlanningModule =
 interface PlanningToolbarProps {
     module: PlanningModule;
 
-    budgetView: BudgetViewState;
+    view: PlanningViewState;
 
-    onBudgetViewChange: (
-        view: BudgetViewState
+    onViewChange: (
+        view: PlanningViewState
     ) => void;
 
     activeCount: number;
@@ -34,14 +35,14 @@ interface PlanningToolbarProps {
 
 export default function PlanningToolbar({
     module,
-    budgetView,
-    onBudgetViewChange,
+    view,
+    onViewChange,
     activeCount,
     archivedCount,
     currency,
     categoryOptions,
 }: PlanningToolbarProps) {
-    if (module !== "budgets") {
+    if (module === "debts") {
         return null;
     }
 
@@ -71,52 +72,94 @@ export default function PlanningToolbar({
                             count: archivedCount,
                         },
                     ]}
-                    value={budgetView}
-                    onValueChange={onBudgetViewChange}
+                    value={view}
+                    onValueChange={onViewChange}
                 />
             </div>
 
             <div className="w-full lg:w-auto">
-                <CreateBudgetDialog
-                    currency={currency}
-                    categoryOptions={categoryOptions}
-                    trigger={
-                        <Card
-                            className="
-                                flex
-                                h-11
-                                w-full
-                                min-w-[180px]
-                                cursor-pointer
-                                items-center
-                                justify-center
-                                self-center
+                {module === "budgets" && (
+                    <CreateBudgetDialog
+                        currency={currency}
+                        categoryOptions={categoryOptions}
+                        trigger={
+                            <Card
+                                className="
+                                    flex
+                                    h-9
+                                    w-full
+                                    min-w-[180px]
+                                    cursor-pointer
+                                    items-center
+                                    justify-center
 
-                                rounded-xl
-                                border
-                                border-transparent
+                                    rounded-xl
+                                    border
+                                    border-transparent
 
-                                bg-white
-                                px-8
-                                text-black
+                                    bg-white
+                                    px-8
+                                    text-black
 
-                                shadow-sm
-                                transition-all
-                                duration-200
+                                    shadow-sm
+                                    transition-all
+                                    duration-200
 
-                                hover:scale-[1.02]
-                                hover:shadow-md
+                                    hover:scale-[1.02]
+                                    hover:shadow-md
 
-                                sm:h-14
-                                lg:min-w-44
-                            "
-                        >
-                            <span className="text-lg font-semibold">
-                                Create Budget
-                            </span>
-                        </Card>
-                    }
-                />
+                                    sm:h-13
+                                    lg:min-w-44
+                                "
+                            >
+                                <span className="text-lg font-semibold">
+                                    Create Budget
+                                </span>
+                            </Card>
+                        }
+                    />
+                )}
+
+                {module === "goals" && (
+                    <AddGoalDialog
+                        currency={currency}
+                        trigger={
+                            <Card
+                                className="
+                                    flex
+                                    h-9
+                                    w-full
+                                    min-w-[180px]
+                                    cursor-pointer
+                                    items-center
+                                    justify-center
+
+                                    rounded-xl
+                                    border
+                                    border-transparent
+
+                                    bg-white
+                                    px-8
+                                    text-black
+
+                                    shadow-sm
+                                    transition-all
+                                    duration-200
+
+                                    hover:scale-[1.02]
+                                    hover:shadow-md
+
+                                    sm:h-13
+                                    lg:min-w-44
+                                "
+                            >
+                                <span className="text-lg font-semibold">
+                                    Create Goal
+                                </span>
+                            </Card>
+                        }
+                    />
+                )}
             </div>
         </div>
     );
