@@ -22,6 +22,10 @@ interface BuildBudgetPreviewParams {
     endDate: Date;
 
     notes?: string;
+
+    isExceeded?: boolean;
+
+    overBudgetAmount: number;
 }
 
 export function buildBudgetPreview({
@@ -34,6 +38,8 @@ export function buildBudgetPreview({
     startDate,
     endDate,
     notes,
+    isExceeded = false,
+    overBudgetAmount,
 }: BuildBudgetPreviewParams): BudgetView {
     const duration = calculateBudgetDuration(
         startDate,
@@ -97,5 +103,9 @@ export function buildBudgetPreview({
 
         message:
             duration?.message,
+
+        isExceeded,
+
+        overBudgetAmount,
     };
 }

@@ -101,6 +101,8 @@ export function getBudgetViews({
                 notes:
                     budget.notes ??
                     undefined,
+
+                overBudgetAmount,
             });
 
         return {

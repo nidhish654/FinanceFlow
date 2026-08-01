@@ -58,9 +58,6 @@ export default function EditAccountDialog({
                     defaultValues={{
                         name: account.name,
                         type: account.type,
-                        currency:
-                            account.currency ??
-                            undefined,
                         openingBalance:
                             account.openingBalance,
                     }}

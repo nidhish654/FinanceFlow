@@ -41,7 +41,7 @@ export const navigation = [
     group: "main",
   },
   {
-    title: "Analytics",
+    title: "Insights & Analytics",
     href: "/analytics",
     icon: ChartColumn,
     group: "main",

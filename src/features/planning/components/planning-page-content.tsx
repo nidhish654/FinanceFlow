@@ -2,8 +2,6 @@ import {
     CategoryType,
 } from "@prisma/client";
 
-import { Separator } from "@/components/ui/separator";
-
 import PlanningWorkspace from "./planning-workspace";
 
 import { getBudgetViews } from "../budget/services/get-budget-views";
@@ -16,7 +14,13 @@ import { getTransactions } from "@/features/transactions/services/get-transactio
 import { getCategories } from "@/features/categories/services/get-categories";
 import { getActiveFinanceProfile } from "@/features/finance-profile/services";
 
-export default async function PlanningPageContent() {
+interface PlanningPageContentProps {
+    initialModule?: "budgets" | "goals";
+}
+
+export default async function PlanningPageContent({
+    initialModule = "budgets",
+}: PlanningPageContentProps) {
     const financeProfile =
         await getActiveFinanceProfile();
 
@@ -79,6 +83,7 @@ export default async function PlanningPageContent() {
         <main className="space-y-4">
 
             <PlanningWorkspace
+                initialModule={initialModule}
                 budgetViews={budgetViews}
                 goalViews={goalViews}
                 currency={

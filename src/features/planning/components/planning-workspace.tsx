@@ -16,6 +16,8 @@ type PlanningModule =
     | "debts";
 
 interface PlanningWorkspaceProps {
+    initialModule?: PlanningModule;
+
     budgetViews: BudgetView[];
 
     goalViews: GoalView[];
@@ -26,13 +28,14 @@ interface PlanningWorkspaceProps {
 }
 
 export default function PlanningWorkspace({
+    initialModule = "budgets",
     budgetViews,
     goalViews,
     currency,
     categoryOptions,
 }: PlanningWorkspaceProps) {
     const [module, setModule] =
-        useState<PlanningModule>("budgets");
+        useState<PlanningModule>(initialModule);
 
     return (
         <main className="space-y-6">
