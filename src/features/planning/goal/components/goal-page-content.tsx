@@ -4,6 +4,10 @@ import { useMemo, useState } from "react";
 
 import CardSelector from "@/components/common/CardSelector";
 
+import GoalFilter, {
+    GoalFilterValue,
+} from "./goal-filter";
+
 import GoalGrid from "./goal-grid";
 import GoalEmptyState from "./goal-empty-state";
 
@@ -11,10 +15,7 @@ import { GoalView } from "../types/goal-view";
 
 import { Separator } from "@/components/ui/separator";
 
-type GoalFilter =
-    | "all"
-    | "pending"
-    | "completed";
+type GoalFilter = GoalFilterValue;
 
 interface GoalPageContentProps {
     goals: GoalView[];
@@ -27,21 +28,21 @@ export default function GoalPageContent({
     archived = false,
 }: GoalPageContentProps) {
     const [filter, setFilter] =
-        useState<GoalFilter>("all");
+        useState<GoalFilterValue>("All");
 
     const visibleGoals = useMemo(() => {
         switch (filter) {
-            case "pending":
+            case "Pending":
                 return goals.filter(
                     (goal) => !goal.completed
                 );
 
-            case "completed":
+            case "Completed":
                 return goals.filter(
                     (goal) => goal.completed
                 );
 
-            case "all":
+            case "All":
             default:
                 return goals;
         }
@@ -52,24 +53,9 @@ export default function GoalPageContent({
 
             <Separator />
 
-            <CardSelector
-                variant="compact"
-                items={[
-                    {
-                        value: "all",
-                        label: "All",
-                    },
-                    {
-                        value: "pending",
-                        label: "Pending",
-                    },
-                    {
-                        value: "completed",
-                        label: "Completed",
-                    },
-                ]}
+            <GoalFilter
                 value={filter}
-                onValueChange={setFilter}
+                onChange={setFilter}
             />
 
             {visibleGoals.length === 0 ? (

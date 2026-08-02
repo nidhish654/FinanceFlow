@@ -10,6 +10,10 @@ import { buildCashFlowAnalysis } from "../builders/build-cashflow-analysis";
 import { buildCashFlowPeriod } from "../lib/build-cashflow-period";
 import { getAccounts } from "@/features/accounts/actions/getAccounts";
 import { buildAccountAnalysis } from "../builders/build-account-analysis";
+import { getBudgets } from "@/features/planning/budget/queries/get-budgets";
+import { buildBudgetAnalysis } from "../builders/build-budget-analysis";
+import { getGoals } from "@/features/planning/goal/queries/get-goals";
+import { buildGoalAnalysis } from "../builders/build-goal-analysis";
 
 import {
     AnalyticsCategoryPoint,
@@ -52,6 +56,9 @@ export async function getAnalyticsView(
     const financeProfile = await requireActiveFinanceProfile();
     const transactions = await getTransactions();
     const accounts = await getAccounts();
+    const budgets = await getBudgets({ financeProfileId: financeProfile.id });
+    const goals = await getGoals({ financeProfileId: financeProfile.id });
+    
     const now = new Date();
     const start = getRangeStart(range, now);
     const monthSpan =
@@ -471,6 +478,17 @@ export async function getAnalyticsView(
         endDate: now,
     });
 
+    const budgetAnalysis = buildBudgetAnalysis({
+        budgets,
+        transactions,
+        currency: financeProfile.baseCurrency,
+    });
+
+    const goalAnalysis = buildGoalAnalysis({
+        goals,
+        currency: financeProfile.baseCurrency,
+    });
+
     return {
         range,
 
@@ -497,10 +515,14 @@ export async function getAnalyticsView(
 
         accountAnalysis,
 
+        budgetAnalysis,
+
         expenseAnalysis,
 
         incomeAnalysis,
 
         cashFlowAnalysis,
+
+        goalAnalysis,
     };
 }

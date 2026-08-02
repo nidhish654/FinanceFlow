@@ -129,6 +129,8 @@ export interface AnalyticsView {
 
     cashFlowAnalysis: AnalyticsCashFlowAnalysis;
 
+    goalAnalysis: AnalyticsGoalAnalysis;
+
     // financialHealth:
     //     AnalyticsFinancialHealth;
 }
@@ -318,5 +320,46 @@ export interface AnalyticsBudgetAnalysis {
     budgets: AnalyticsBudget[];
     overspent: AnalyticsBudget[];
     monthly: AnalyticsBudgetMonth[];
+    insights: string[];
+}
+
+// ─── Goal Analytics ────────────────────────────────────────────────────────
+
+export type GoalHealthStatus =
+    | "Excellent"
+    | "Good"
+    | "Needs Attention"
+    | "Critical";
+
+export interface AnalyticsGoalSummary {
+    totalGoals: number;
+    activeGoals: number;
+    completedGoals: number;
+    totalTarget: number;
+    totalSaved: number;
+    totalRemaining: number;
+    completionPercentage: number;
+    healthStatus: GoalHealthStatus;
+}
+
+export interface AnalyticsGoal {
+    id: string;
+    name: string;
+    icon: string | null;
+    targetAmount: number;
+    savedAmount: number;
+    remainingAmount: number;
+    completionPercentage: number;
+    isCompleted: boolean;
+    isOverdue: boolean;
+    targetDate: Date | null;
+    daysRemaining: number | null;
+    healthStatus: GoalHealthStatus;
+}
+
+export interface AnalyticsGoalAnalysis {
+    summary: AnalyticsGoalSummary;
+    goals: AnalyticsGoal[];
+    needsAttention: AnalyticsGoal[];
     insights: string[];
 }

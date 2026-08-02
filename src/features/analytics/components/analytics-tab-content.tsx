@@ -5,6 +5,8 @@ import ExpenseTab from "./tabs/expenses/expense-tab";
 import IncomeTab from "./tabs/income/income-tab";
 import CashFlowTab from "./tabs/cash-flow/cashflow-tab";
 import AccountsTab from "./tabs/accounts/accounts-tab";
+import BudgetTab from "./tabs/budgets/budget-tab";
+import GoalTab from "./tabs/goals/goal-tab";
 
 import {
     AnalyticsTab,
@@ -74,7 +76,20 @@ export default function AnalyticsTabContent({
             );
 
         case "budgets":
+            return (
+                <BudgetTab
+                    analysis={analytics.budgetAnalysis}
+                    currency={analytics.currency}
+                />
+            );
+
         case "goals":
+            return (
+                <GoalTab
+                    analysis={analytics.goalAnalysis}
+                    currency={analytics.currency}
+                />
+            );
         case "merchants":
             return (
                 <div

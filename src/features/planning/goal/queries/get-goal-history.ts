@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-import type { GoalHistoryView } from "../types/goal-query";
+import type { GoalHistory } from "../types/goal-query";
 
 type GetGoalHistoryOptions = {
     goalId: string;
@@ -10,7 +10,7 @@ type GetGoalHistoryOptions = {
 export async function getGoalHistory({
     goalId,
     financeProfileId,
-}: GetGoalHistoryOptions): Promise<GoalHistoryView[]> {
+}: GetGoalHistoryOptions): Promise<GoalHistory[]> {
     return prisma.goalHistory.findMany({
         where: {
             goalId,

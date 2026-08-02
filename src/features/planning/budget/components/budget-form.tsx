@@ -151,6 +151,8 @@ export default function BudgetForm({
                     startDate,
 
                     endDate,
+                    
+                    overBudgetAmount: 0,
                 }),
             [
                 amount,

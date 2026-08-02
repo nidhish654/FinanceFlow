@@ -100,6 +100,8 @@ export default function GoalForm({
                 notes,
 
                 currency,
+                
+                createdAt: new Date(),
             }),
         [
             name,

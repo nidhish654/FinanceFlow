@@ -94,45 +94,47 @@ export default function AnalyticsPageContent({
 
                 </div>
 
-                <div className="overflow-x-auto">
-                    <div
-                        className="
-                            flex
-                            w-max
-                            gap-1
-                            rounded-xl
-                            border
-                            bg-muted/40
-                            p-1
-                        "
-                    >
-                        {ANALYTICS_RANGES.map(
-                            (item) => (
-                                <Button
-                                    key={item}
-                                    asChild
-                                    size="sm"
-                                    variant={
-                                        item === range
-                                            ? "secondary"
-                                            : "ghost"
-                                    }
-                                    className={cn(
-                                        "whitespace-nowrap rounded-lg px-4",
-                                        item === range &&
-                                        "bg-background shadow-sm"
-                                    )}
-                                >
-                                    <Link
-                                        href={`/analytics?range=${item}`}
+                {tab !== "budgets" && tab !== "goals" && (
+                    <div className="overflow-x-auto">
+                        <div
+                            className="
+                                flex
+                                w-max
+                                gap-1
+                                rounded-xl
+                                border
+                                bg-muted/40
+                                p-1
+                            "
+                        >
+                            {ANALYTICS_RANGES.map(
+                                (item) => (
+                                    <Button
+                                        key={item}
+                                        asChild
+                                        size="sm"
+                                        variant={
+                                            item === range
+                                                ? "secondary"
+                                                : "ghost"
+                                        }
+                                        className={cn(
+                                            "whitespace-nowrap rounded-lg px-4",
+                                            item === range &&
+                                            "bg-background shadow-sm"
+                                        )}
                                     >
-                                        {item}
-                                    </Link>
-                                </Button>
-                            )
-                        )}
+                                        <Link
+                                            href={`/analytics?range=${item}`}
+                                        >
+                                            {item}
+                                        </Link>
+                                    </Button>
+                                )
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
             </div>
 
@@ -140,17 +142,19 @@ export default function AnalyticsPageContent({
              * Range Info
              * ========================================= */}
 
-            <p
-                className="
-                    text-sm
-                    text-muted-foreground
-                "
-            >
-                {RANGE_LABELS[
-                    range
-                ]}{" "}
-                compared with the preceding period.
-            </p>
+            {tab !== "budgets" && tab !== "goals" && (
+                <p
+                    className="
+                        text-sm
+                        text-muted-foreground
+                    "
+                >
+                    {RANGE_LABELS[
+                        range
+                    ]}{" "}
+                    compared with the preceding period.
+                </p>
+            )}
 
             {/* =========================================
              * Analytics Tabs
