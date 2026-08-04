@@ -15,9 +15,9 @@ import { buildBudgetAnalysis } from "../builders/build-budget-analysis";
 import { getGoals } from "@/features/planning/goal/queries/get-goals";
 import { buildGoalAnalysis } from "../builders/build-goal-analysis";
 
+
 import {
     AnalyticsCategoryPoint,
-    AnalyticsMerchantPoint,
     AnalyticsMonthlyPoint,
     AnalyticsRange,
     AnalyticsView,
@@ -41,7 +41,7 @@ function getRangeStart(range: AnalyticsRange, now: Date) {
         return new Date(now.getFullYear(), 0, 1);
     }
 
-    const monthCount = range === "3M" ? 3 : range === "6M" ? 6 : 12;
+    const monthCount = range === "1M" ? 1 : range === "3M" ? 3 : range === "6M" ? 6 : 12;
 
     return new Date(
         now.getFullYear(),
@@ -50,45 +50,47 @@ function getRangeStart(range: AnalyticsRange, now: Date) {
     );
 }
 
+import { AnalyticsDateRange } from "../types/analytics-view";
+
 export async function getAnalyticsView(
-    range: AnalyticsRange
+    range: AnalyticsRange,
+    customRange?: AnalyticsDateRange
 ): Promise<AnalyticsView> {
     const financeProfile = await requireActiveFinanceProfile();
     const transactions = await getTransactions();
     const accounts = await getAccounts();
     const budgets = await getBudgets({ financeProfileId: financeProfile.id });
     const goals = await getGoals({ financeProfileId: financeProfile.id });
-    
-    const now = new Date();
-    const start = getRangeStart(range, now);
-    const monthSpan =
-        (now.getFullYear() - start.getFullYear()) * 12 +
-        now.getMonth() - start.getMonth() +
-        1;
-    const previousStart = new Date(
-        start.getFullYear(),
-        start.getMonth() - monthSpan,
-        1
-    );
+
+    let now = new Date();
+    let start = getRangeStart(range, now);
+    let previousStart: Date;
+    let previousEnd: Date;
+
+    if (range === "CUSTOM" && customRange) {
+        start = customRange.startDate;
+        now = customRange.endDate;
+        const duration = now.getTime() - start.getTime();
+        previousEnd = new Date(start.getTime());
+        previousStart = new Date(start.getTime() - duration);
+    } else if (range === "YTD") {
+        previousStart = new Date(start.getFullYear() - 1, 0, 1);
+        previousEnd = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    } else {
+        const monthSpan = range === "1M" ? 1 : range === "3M" ? 3 : range === "6M" ? 6 : 12;
+        previousStart = new Date(start.getFullYear(), start.getMonth() - monthSpan, 1);
+        previousEnd = new Date(start.getFullYear(), start.getMonth(), 1);
+    }
 
     const periodTransactions = transactions.filter((transaction) => {
         const date = new Date(transaction.transactionDate);
-
         return date >= start && date <= now;
     });
 
     const previousTransactions = transactions.filter((transaction) => {
         const date = new Date(transaction.transactionDate);
-
-        return date >= previousStart && date < start;
+        return date >= previousStart && date < previousEnd;
     });
-
-    const summary =
-        buildSummary({
-            periodTransactions,
-
-            previousTransactions,
-        });
 
     const monthlyCashFlow: AnalyticsMonthlyPoint[] = [];
     const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -147,30 +149,43 @@ export async function getAnalyticsView(
         cursor.setMonth(cursor.getMonth() + 1);
     }
 
+    const summary = buildSummary({
+        periodTransactions,
+        previousTransactions,
+        monthlyCashFlow,
+    });
+
     const categoryMap = new Map<string, AnalyticsCategoryPoint>();
-    const merchantMap = new Map<string, AnalyticsMerchantPoint>();
 
     periodTransactions
         .filter((transaction) => transaction.type === TransactionType.EXPENSE)
         .forEach((transaction) => {
             const category = transaction.category;
-            const categoryKey = category?.id ?? "uncategorized";
-            const categoryName = category?.name ?? "Uncategorized";
-            const currentCategory = categoryMap.get(categoryKey);
-            const merchantName = transaction.description?.trim() || categoryName;
-            const currentMerchant = merchantMap.get(merchantName);
 
-            categoryMap.set(categoryKey, {
-                id: categoryKey,
-                name: categoryName,
-                amount: (currentCategory?.amount ?? 0) + transaction.amount,
-            });
+            const isSubcategory = !!category?.parent;
+            const parentKey = isSubcategory ? category!.parent!.id : (category?.id ?? "uncategorized");
+            const parentName = isSubcategory ? category!.parent!.name : (category?.name ?? "Uncategorized");
 
-            merchantMap.set(merchantName, {
-                name: merchantName,
-                amount: (currentMerchant?.amount ?? 0) + transaction.amount,
-                transactionCount: (currentMerchant?.transactionCount ?? 0) + 1,
-            });
+            const currentCategory = categoryMap.get(parentKey) ?? {
+                id: parentKey,
+                name: parentName,
+                amount: 0,
+                subcategories: [],
+            };
+
+            currentCategory.amount += transaction.amount;
+
+            if (isSubcategory) {
+                const subKey = category!.id;
+                let sub = currentCategory.subcategories?.find(s => s.id === subKey);
+                if (!sub) {
+                    sub = { id: subKey, name: category!.name, amount: 0 };
+                    currentCategory.subcategories?.push(sub);
+                }
+                sub.amount += transaction.amount;
+            }
+
+            categoryMap.set(parentKey, currentCategory);
         });
 
     const byAmount = <T extends { amount: number }>(a: T, b: T) =>
@@ -288,31 +303,32 @@ export async function getAnalyticsView(
                 TransactionType.INCOME
         )
         .forEach((transaction) => {
-            const categoryId =
-                transaction.category?.id ??
-                "uncategorized";
+            const category = transaction.category;
 
-            const current =
-                incomeCategoryMap.get(
-                    categoryId
-                );
+            const isSubcategory = !!category?.parent;
+            const parentKey = isSubcategory ? category!.parent!.id : (category?.id ?? "uncategorized");
+            const parentName = isSubcategory ? category!.parent!.name : (category?.name ?? "Uncategorized");
 
-            incomeCategoryMap.set(
-                categoryId,
-                {
-                    id: categoryId,
+            const current = incomeCategoryMap.get(parentKey) ?? {
+                id: parentKey,
+                name: parentName,
+                amount: 0,
+                subcategories: [],
+            };
 
-                    name:
-                        transaction.category
-                            ?.name ??
-                        "Uncategorized",
+            current.amount += transaction.amount;
 
-                    amount:
-                        (current?.amount ??
-                            0) +
-                        transaction.amount,
+            if (isSubcategory) {
+                const subKey = category!.id;
+                let sub = current.subcategories?.find(s => s.id === subKey);
+                if (!sub) {
+                    sub = { id: subKey, name: category!.name, amount: 0 };
+                    current.subcategories?.push(sub);
                 }
-            );
+                sub.amount += transaction.amount;
+            }
+
+            incomeCategoryMap.set(parentKey, current);
         });
 
     const incomeMonthly: AnalyticsIncomePeriod[] = [];
@@ -489,29 +505,64 @@ export async function getAnalyticsView(
         currency: financeProfile.baseCurrency,
     });
 
+    let periodLabel = "";
+    let comparisonLabel = "";
+
+    switch (range) {
+        case "1M":
+            periodLabel = "last 30 days";
+            comparisonLabel = "last 30 days";
+            break;
+
+        case "3M":
+            periodLabel = "last 3 months";
+            comparisonLabel = "last 3 months";
+            break;
+
+        case "6M":
+            periodLabel = "last 6 months";
+            comparisonLabel = "last 6 months";
+            break;
+
+        case "YTD":
+            periodLabel = "year-to-date";
+            comparisonLabel = "same period last year";
+            break;
+
+        case "12M":
+            periodLabel = "last 12 months";
+            comparisonLabel = "last 12 months";
+            break;
+
+        case "CUSTOM":
+            periodLabel = `${start.toLocaleDateString()} - ${now.toLocaleDateString()}`;
+            comparisonLabel =
+                `${previousStart.toLocaleDateString()} - ${previousEnd.toLocaleDateString()}`;
+            break;
+    }
+
     return {
         range,
 
-        currency:
-            financeProfile.baseCurrency,
+        customRange,
+
+        period: {
+            label: periodLabel,
+            comparisonLabel,
+        },
+
+        currency: financeProfile.baseCurrency,
 
         summary,
 
         monthlyCashFlow,
 
-        topCategories:
-            Array.from(
-                categoryMap.values()
-            )
-                .sort(byAmount)
-                .slice(0, 5),
-
-        topMerchants:
-            Array.from(
-                merchantMap.values()
-            )
-                .sort(byAmount)
-                .slice(0, 5),
+        topCategories: Array.from(
+            categoryMap.values()
+        )
+            .sort((a, b) => b.amount - a.amount)
+            .slice(0, 5),
+        transactions: periodTransactions,
 
         accountAnalysis,
 

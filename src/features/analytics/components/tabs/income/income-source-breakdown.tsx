@@ -12,6 +12,8 @@ import {
     AnalyticsCategoryPoint,
 } from "../../../types/analytics-view";
 
+import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import {
     formatCurrency,
     formatPercentage,
@@ -30,6 +32,17 @@ export default function IncomeSourceBreakdown({
     totalIncome,
     currency,
 }: IncomeSourceBreakdownProps) {
+    const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+    const toggleExpand = (id: string) => {
+        setExpandedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
     return (
         <Card
             className="
@@ -174,7 +187,20 @@ export default function IncomeSourceBreakdown({
                                                         percentage
                                                     )}
                                                 </p>
-
+                                                
+                                                {source.subcategories && source.subcategories.length > 0 && (
+                                                    <button
+                                                        onClick={() => toggleExpand(source.id)}
+                                                        className="mt-1 flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                                    >
+                                                        {expandedIds.has(source.id) ? (
+                                                            <ChevronDown className="mr-1 h-3 w-3" />
+                                                        ) : (
+                                                            <ChevronRight className="mr-1 h-3 w-3" />
+                                                        )}
+                                                        {source.subcategories.length} subcategories
+                                                    </button>
+                                                )}
                                             </div>
 
                                         </div>
@@ -204,6 +230,27 @@ export default function IncomeSourceBreakdown({
                                             />
                                         </div>
 
+                                        {expandedIds.has(source.id) && source.subcategories && (
+                                            <div className="mt-3 pl-11 space-y-3">
+                                                {source.subcategories
+                                                    .sort((a, b) => b.amount - a.amount)
+                                                    .map(sub => {
+                                                        const subPercentage = totalIncome > 0 ? (sub.amount / totalIncome) * 100 : 0;
+                                                        return (
+                                                            <div key={sub.id} className="flex items-center justify-between text-sm">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-1 h-1 rounded-full bg-emerald-500/40" />
+                                                                    <span className="text-muted-foreground">{sub.name}</span>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <span className="font-medium tabular-nums">{formatCurrency(sub.amount, currency)}</span>
+                                                                    <span className="ml-2 text-xs text-muted-foreground tabular-nums w-8 inline-block text-right">{subPercentage.toFixed(0)}%</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             }

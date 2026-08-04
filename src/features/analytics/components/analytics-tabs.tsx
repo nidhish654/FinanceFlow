@@ -8,6 +8,7 @@ import {
     ANALYTICS_TABS,
     AnalyticsTab,
 } from "../types/analytics-view";
+import { Separator } from "@/components/ui/separator";
 
 interface AnalyticsTabsProps {
     value: AnalyticsTab;
@@ -35,7 +36,7 @@ const TAB_LABELS: Record<
 
     goals: "Goals",
 
-    merchants: "Merchants",
+    categories: "Categories",
 };
 
 export default function AnalyticsTabs({
@@ -43,61 +44,151 @@ export default function AnalyticsTabs({
     onValueChange,
 }: AnalyticsTabsProps) {
     return (
-        <div
-            className="
-                overflow-x-auto
-                scrollbar-hide
-                pb-0.5
-            "
-        >
-            <div
-                className="
-                    flex
-                    items-center
-                    justify-center
-                    w-max
-                    gap-1
-                    rounded-2xl
-                    border
-                    bg-muted/40
-                    p-1
-                "
-            >
-                {ANALYTICS_TABS.map(
-                    (tab) => (
+        <>
+            {/* =========================================
+            * Mobile Layout
+            * ========================================= */}
+
+            <div className="md:hidden">
+                <div
+                    className="
+                        grid
+                        grid-cols-2
+                        gap-x-4
+                        gap-y-3
+                    "
+                >
+                    {ANALYTICS_TABS.map((tab) => (
                         <Button
                             key={tab}
                             size="sm"
-                            variant={
-                                value === tab
-                                    ? "secondary"
-                                    : "ghost"
-                            }
+                            variant="ghost"
+                            onClick={() => onValueChange(tab)}
                             className={cn(
                                 `
-                                whitespace-nowrap
-                                rounded-xl
-                                px-4
+                                    relative
+                                    h-11
+                                    rounded-none
+                                    border-0
+                                    bg-transparent
+                                    px-1
+                                    pb-2
+
+                                    text-base
+                                    font-medium
+                                    text-muted-foreground
+
+                                    transition-colors
+                                    duration-200
+
+                                    hover:bg-transparent
+                                    hover:text-foreground
+
+                                    active:scale-[0.98]
                                 `,
-                                value ===
-                                tab &&
-                                "bg-background shadow-sm"
+                                value === tab &&
+                                `
+                                    text-foreground
+                                    font-semibold
+                                `
                             )}
-                            onClick={() =>
-                                onValueChange(
-                                    tab
-                                )
-                            }
                         >
-                            {
-                                TAB_LABELS[
-                                tab
-                                ]
-                            }
+                            {TAB_LABELS[tab]}
+
+                            {/* Active Indicator */}
+                            <span
+                                className={cn(
+                                    `
+                                        absolute
+                                        bottom-0
+                                        left-1/2
+                                        h-0.5
+                                        -translate-x-1/2
+                                        rounded-full
+                                        bg-primary
+                                        transition-all
+                                        duration-300
+                                    `,
+                                    value === tab
+                                        ? "w-12 opacity-100"
+                                        : "w-0 opacity-0"
+                                )}
+                            />
                         </Button>
-                    )
-                )}
+                    ))}
+                </div>
             </div>
-        </div>
+
+            {/* =========================================
+            * Desktop Layout
+            * ========================================= */}
+
+            <div
+                className="
+                    hidden
+                    md:flex
+                    items-center
+                    gap-6
+                    border-b
+                    border-border/60
+                    pb-2
+                "
+            >
+                {ANALYTICS_TABS.map((tab) => (
+                    <Button
+                        key={tab}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onValueChange(tab)}
+                        className={cn(
+                            `
+                                relative
+                                h-10
+                                rounded-none
+                                px-0
+                                pb-3
+                                text-2xl
+                                font-medium
+                                text-muted-foreground
+                                transition-colors
+                                duration-200
+
+                                hover:bg-transparent
+                                hover:text-foreground
+
+                                active:scale-[0.98]
+                            `,
+                            value === tab &&
+                            `
+                                text-foreground
+                                font-semibold
+                                bg-transparent
+                            `
+                        )}
+                    >
+                        {TAB_LABELS[tab]}
+
+                        {/* Bottom Indicator */}
+                        <span
+                            className={cn(
+                                `
+                                    absolute
+                                    bottom-0
+                                    left-0
+                                    h-0.5
+                                    rounded-full
+                                    bg-primary
+                                    transition-all
+                                    duration-300
+                                `,
+                                value === tab
+                                    ? "w-full opacity-100"
+                                    : "w-0 opacity-0"
+                            )}
+                        />
+                    </Button>
+                ))}
+            </div>
+        </>
     );
 }

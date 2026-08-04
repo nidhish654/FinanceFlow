@@ -1,4 +1,5 @@
 "use client";
+import { Category } from "@prisma/client";
 
 import { useState } from "react";
 
@@ -17,7 +18,15 @@ import {
 
 import CreateCategoryForm from "./create-category-form";
 
-export default function CreateCategoryDialog() {
+interface CreateCategoryDialogProps {
+    parentCategory?: Category;
+    children?: React.ReactNode;
+}
+
+export default function CreateCategoryDialog({
+    parentCategory,
+    children,
+}: CreateCategoryDialogProps = {}) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -26,24 +35,27 @@ export default function CreateCategoryDialog() {
             onOpenChange={setOpen}
         >
             <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Category
-                </Button>
+                {children ? children : (
+                    <Button className="w-full sm:w-auto">
+                        <Plus className="mr-2 h-4 w-4" />
+                        New Category
+                    </Button>
+                )}
             </DialogTrigger>
 
             <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>
-                        New Category
+                        {parentCategory ? "New Subcategory" : "New Category"}
                     </DialogTitle>
 
                     <DialogDescription>
-                        Create a new income or expense category.
+                        {parentCategory ? `Create a new subcategory under ${parentCategory.name}.` : "Create a new income or expense category."}
                     </DialogDescription>
                 </DialogHeader>
 
                 <CreateCategoryForm
+                    parentCategory={parentCategory}
                     onSuccess={() =>
                         setOpen(false)
                     }

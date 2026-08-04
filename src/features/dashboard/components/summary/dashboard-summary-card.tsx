@@ -84,7 +84,7 @@ export default function DashboardSummaryCard({
 
                 {/* ================= Value ================= */}
 
-                <div className="mt-5">
+                <div className="mt-1">
 
                     <h2
                         className="
@@ -106,8 +106,8 @@ export default function DashboardSummaryCard({
 
                     <p
                         className="
-                            mt-1
-                            text-xs
+                            mt-3
+                            text-xm
                             text-muted-foreground
                         "
                     >

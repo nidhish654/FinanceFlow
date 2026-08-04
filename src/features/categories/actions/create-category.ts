@@ -41,6 +41,8 @@ export async function createCategory(
                 type: data.type,
 
                 name: data.name,
+
+                parentCategoryId: data.parentCategoryId || null,
             },
         });
 
@@ -66,6 +68,21 @@ export async function createCategory(
             },
         });
 
+    let categoryType = data.type;
+
+    if (data.parentCategoryId) {
+        const parent = await prisma.category.findUnique({
+            where: { id: data.parentCategoryId }
+        });
+        if (!parent) {
+            return {
+                success: false,
+                message: "Parent category not found."
+            };
+        }
+        categoryType = parent.type;
+    }
+
     await prisma.category.create({
         data: {
             financeProfileId:
@@ -76,7 +93,9 @@ export async function createCategory(
             description:
                 data.description || null,
 
-            type: data.type,
+            type: categoryType,
+
+            parentCategoryId: data.parentCategoryId || null,
 
             icon:
                 data.icon || null,

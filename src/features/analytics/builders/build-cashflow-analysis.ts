@@ -65,11 +65,11 @@ export function buildCashFlowAnalysis({
                 ?.closingBalance ?? 0,
 
         netCashFlow:
-            summary.netCashFlow,
+            summary.netCashFlow.current,
 
         averageMonthlyCashFlow:
             monthly.length
-                ? summary.netCashFlow /
+                ? summary.netCashFlow.current /
                   monthly.length
                 : 0,
 

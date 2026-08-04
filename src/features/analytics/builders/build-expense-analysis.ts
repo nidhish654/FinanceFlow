@@ -35,11 +35,11 @@ export function buildExpenseAnalysis({
     byAmount,
 }: BuildExpenseAnalysisParams): AnalyticsExpenseAnalysis {
     const expenseSummary = {
-        totalExpense: summary.expense,
+        totalExpense: summary.expense.current,
 
         averageMonthlyExpense:
             monthly.length > 0
-                ? summary.expense /
+                ? summary.expense.current /
                 monthly.length
                 : 0,
 

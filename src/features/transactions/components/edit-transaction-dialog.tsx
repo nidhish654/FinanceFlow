@@ -41,6 +41,19 @@ export default function EditTransactionDialog({
 }: EditTransactionDialogProps) {
     const [, startTransition] = useTransition();
 
+    const selectedCategory = categoryOptions.find(
+        (c) => c.value === transaction.categoryId
+    );
+    const isSubcategory = !!selectedCategory?.parentCategoryId;
+
+    const initialCategoryId = isSubcategory
+        ? selectedCategory.parentCategoryId
+        : transaction.categoryId;
+
+    const initialSubcategoryId = isSubcategory
+        ? transaction.categoryId
+        : "";
+
     async function handleSubmit(values: any) {
         startTransition(async () => {
             const result = await updateTransaction(
@@ -76,7 +89,7 @@ export default function EditTransactionDialog({
                 </DialogHeader>
 
                 <div className="max-h-[80vh] overflow-y-auto px-4 py-4 md:px-6 md:py-6">
-                                        <TransactionForm
+                    <TransactionForm
                         submitLabel="Save Changes"
                         accountOptions={accountOptions}
                         categoryOptions={categoryOptions}
@@ -88,9 +101,9 @@ export default function EditTransactionDialog({
                                 transaction.transferAccountId ??
                                 "",
 
-                            categoryId:
-                                transaction.categoryId ??
-                                "",
+                            categoryId: initialCategoryId ?? "",
+
+                            subcategoryId: initialSubcategoryId ?? "",
 
                             type: transaction.type,
 

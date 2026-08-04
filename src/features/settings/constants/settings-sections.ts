@@ -1,0 +1,10 @@
+import { SettingsSectionId } from "../types/settings";
+
+export const SETTINGS_SECTIONS: Record<SettingsSectionId, string> = {
+    profile: "Profile",
+    preferences: "Preferences",
+    "financial-defaults": "Financial Defaults",
+    security: "Security",
+    "data-management": "Data Management",
+    about: "About",
+};

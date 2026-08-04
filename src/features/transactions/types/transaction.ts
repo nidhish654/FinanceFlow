@@ -23,6 +23,15 @@ export type TransactionWithRelations =
                     name: true;
                     icon: true;
                     color: true;
+                    parentCategoryId: true;
+                    parent: {
+                        select: {
+                            id: true;
+                            name: true;
+                            icon: true;
+                            color: true;
+                        };
+                    };
                 };
             };
         };

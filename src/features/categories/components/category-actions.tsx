@@ -7,6 +7,7 @@ import {
     Pencil,
     RotateCcw,
     Trash2,
+    PlusCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import ArchiveCategoryDialog from "../dialogs/archive-category-dialog";
 import DeleteCategoryDialog from "../dialogs/delete-category-dialog";
 import EditCategoryDialog from "../dialogs/edit-category-dialog";
 import RestoreCategoryDialog from "../dialogs/restore-category-dialog";
+import CreateCategoryDialog from "./create-category-dialog";
 
 interface CategoryActionsProps {
     category: Category;
@@ -57,6 +59,15 @@ export default function CategoryActions({
                         Edit
                     </DropdownMenuItem>
                 </EditCategoryDialog>
+
+                {!category.parentCategoryId && !category.isArchived && (
+                    <CreateCategoryDialog parentCategory={category}>
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add Subcategory
+                        </DropdownMenuItem>
+                    </CreateCategoryDialog>
+                )}
 
                 {category.isArchived ? (
                     <RestoreCategoryDialog

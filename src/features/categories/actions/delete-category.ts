@@ -61,10 +61,13 @@ export async function deleteCategory({
             };
         }
 
+        const isSubcategory = !!category.parentCategoryId;
+        const actualReplacementId = isSubcategory ? category.parentCategoryId : replacementCategoryId;
+
         if (
             category._count.transactions >
                 0 &&
-            !replacementCategoryId
+            !actualReplacementId
         ) {
             return {
                 success: false,
@@ -74,7 +77,7 @@ export async function deleteCategory({
         }
 
         if (
-            replacementCategoryId ===
+            actualReplacementId ===
             category.id
         ) {
             return {
@@ -94,7 +97,7 @@ export async function deleteCategory({
                         await tx.category.findFirst(
                             {
                                 where: {
-                                    id: replacementCategoryId,
+                                    id: actualReplacementId!,
                                     financeProfileId:
                                         financeProfile.id,
                                     type: category.type,

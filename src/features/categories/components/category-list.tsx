@@ -57,7 +57,16 @@ export default function CategoryList({
         title: string,
         items: Category[]
     ) {
-        if (items.length === 0) return null;
+        const parents = items.filter((c) => !c.parentCategoryId);
+        const childrenByParentId = items.reduce((acc, c) => {
+            if (c.parentCategoryId) {
+                if (!acc[c.parentCategoryId]) acc[c.parentCategoryId] = [];
+                acc[c.parentCategoryId].push(c);
+            }
+            return acc;
+        }, {} as Record<string, Category[]>);
+
+        if (parents.length === 0) return null;
 
         return (
             <section className="space-y-5">
@@ -69,19 +78,19 @@ export default function CategoryList({
                         </h2>
 
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-base font-semibold text-muted-foreground">
-                            {items.length}
+                            {parents.length}
                         </div>
                     </div>
 
                     <div className="h-px bg-border" />
                 </div>
 
-                {/* Cards */}
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
-                    {items.map((category) => (
+                    {parents.map((category) => (
                         <CategoryCard
                             key={category.id}
                             category={category}
+                            subcategories={childrenByParentId[category.id] || []}
                         />
                     ))}
                 </div>
@@ -96,12 +105,12 @@ export default function CategoryList({
                     {
                         value: "active",
                         label: "Active",
-                        count: activeCategories.length,
+                        count: activeCategories.filter(c => !c.parentCategoryId).length,
                     },
                     {
                         value: "archived",
                         label: "Archived",
-                        count: archivedCategories.length,
+                        count: archivedCategories.filter(c => !c.parentCategoryId).length,
                     },
                 ]}
                 value={view}

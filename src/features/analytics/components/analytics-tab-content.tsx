@@ -7,6 +7,7 @@ import CashFlowTab from "./tabs/cash-flow/cashflow-tab";
 import AccountsTab from "./tabs/accounts/accounts-tab";
 import BudgetTab from "./tabs/budgets/budget-tab";
 import GoalTab from "./tabs/goals/goal-tab";
+import CategoryTab from "./tabs/categories/category-tab";
 
 import {
     AnalyticsTab,
@@ -90,40 +91,12 @@ export default function AnalyticsTabContent({
                     currency={analytics.currency}
                 />
             );
-        case "merchants":
+        case "categories":
             return (
-                <div
-                    className="
-                        flex
-                        h-72
-                        items-center
-                        justify-center
-                        rounded-2xl
-                        border
-                        border-dashed
-                    "
-                >
-                    <div className="text-center">
-
-                        <h2 className="text-xl font-semibold">
-                            Coming Soon
-                        </h2>
-
-                        <p
-                            className="
-                                mt-2
-                                text-sm
-                                text-muted-foreground
-                            "
-                        >
-                            This analytics section
-                            will be implemented in
-                            the next phase.
-                        </p>
-
-                    </div>
-
-                </div>
+                <CategoryTab
+                    transactions={analytics.transactions}
+                    currency={analytics.currency}
+                />
             );
 
         default:

@@ -39,12 +39,18 @@ interface CategoryFormProps {
     onSubmit: (
         values: CategoryFormInput
     ) => Promise<void>;
+
+    hideTypeSelector?: boolean;
+
+    isSubcategory?: boolean;
 }
 
 export default function CategoryForm({
     defaultValues,
     submitLabel = "Create Category",
     onSubmit,
+    hideTypeSelector = false,
+    isSubcategory = false,
 }: CategoryFormProps) {
     const form = useForm<CategoryFormInput>({
         resolver: zodResolver(categorySchema),
@@ -107,62 +113,62 @@ export default function CategoryForm({
                 />
             </FormField>
 
-            <Controller
-                control={control}
-                name="type"
-                render={({ field }) => (
-                    <FormField
-                        label="Category Type"
-                        required
-                        error={
-                            errors.type?.message
-                        }
-                    >
-                        <SelectField
-                            value={field.value}
-                            onValueChange={
-                                field.onChange
-                            }
-                            placeholder="Select category type"
-                            options={
-                                CATEGORY_TYPE_OPTIONS
-                            }
-                        />
-                    </FormField>
-                )}
-            />
+            {!hideTypeSelector && (
+                <Controller
+                    control={control}
+                    name="type"
+                    render={({ field }) => (
+                        <FormField
+                            label="Category Type"
+                            required
+                            error={errors.type?.message}
+                        >
+                            <SelectField
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                placeholder="Select category type"
+                                options={CATEGORY_TYPE_OPTIONS}
+                            />
+                        </FormField>
+                    )}
+                />
+            )}
 
-            <Controller
-                control={control}
-                name="icon"
-                render={({ field }) => (
-                    <FormField
-                        label="Category Icon"
-                        error={errors.icon?.message}
-                    >
-                        <IconPicker
-                            value={field.value}
-                            onChange={field.onChange}
-                        />
-                    </FormField>
-                )}
-            />
+            {!isSubcategory && (
+                <>
+                    <Controller
+                        control={control}
+                        name="icon"
+                        render={({ field }) => (
+                            <FormField
+                                label="Category Icon"
+                                error={errors.icon?.message}
+                            >
+                                <IconPicker
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            </FormField>
+                        )}
+                    />
 
-            <Controller
-                control={control}
-                name="color"
-                render={({ field }) => (
-                    <FormField
-                        label="Accent Color"
-                        error={errors.color?.message}
-                    >
-                        <ColorPicker
-                            value={field.value}
-                            onChange={field.onChange}
-                        />
-                    </FormField>
-                )}
-            />
+                    <Controller
+                        control={control}
+                        name="color"
+                        render={({ field }) => (
+                            <FormField
+                                label="Accent Color"
+                                error={errors.color?.message}
+                            >
+                                <ColorPicker
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            </FormField>
+                        )}
+                    />
+                </>
+            )}
 
             <Button
                 type="submit"

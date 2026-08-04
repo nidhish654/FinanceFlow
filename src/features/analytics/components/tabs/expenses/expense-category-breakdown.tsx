@@ -12,6 +12,8 @@ import {
     AnalyticsCategoryPoint,
 } from "../../../types/analytics-view";
 
+import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import {
     formatCurrency,
     formatPercentage,
@@ -32,6 +34,17 @@ export default function ExpenseCategoryBreakdown({
     totalExpense,
     currency,
 }: ExpenseCategoryBreakdownProps) {
+    const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+    const toggleExpand = (id: string) => {
+        setExpandedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
     return (
         <Card
             className="
@@ -181,7 +194,19 @@ export default function ExpenseCategoryBreakdown({
                                                         percentage
                                                     )}
                                                 </p>
-
+                                                {category.subcategories && category.subcategories.length > 0 && (
+                                                    <button
+                                                        onClick={() => toggleExpand(category.id)}
+                                                        className="mt-1 flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                                    >
+                                                        {expandedIds.has(category.id) ? (
+                                                            <ChevronDown className="mr-1 h-3 w-3" />
+                                                        ) : (
+                                                            <ChevronRight className="mr-1 h-3 w-3" />
+                                                        )}
+                                                        {category.subcategories.length} subcategories
+                                                    </button>
+                                                )}
                                             </div>
 
                                         </div>
@@ -210,6 +235,28 @@ export default function ExpenseCategoryBreakdown({
                                                 }}
                                             />
                                         </div>
+
+                                        {expandedIds.has(category.id) && category.subcategories && (
+                                            <div className="mt-3 pl-11 space-y-3">
+                                                {category.subcategories
+                                                    .sort((a, b) => b.amount - a.amount)
+                                                    .map(sub => {
+                                                        const subPercentage = totalExpense > 0 ? (sub.amount / totalExpense) * 100 : 0;
+                                                        return (
+                                                            <div key={sub.id} className="flex items-center justify-between text-sm">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-1 h-1 rounded-full bg-muted-foreground/40" />
+                                                                    <span className="text-muted-foreground">{sub.name}</span>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <span className="font-medium tabular-nums">{formatCurrency(sub.amount, currency)}</span>
+                                                                    <span className="ml-2 text-xs text-muted-foreground tabular-nums w-8 inline-block text-right">{subPercentage.toFixed(0)}%</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                            </div>
+                                        )}
 
                                     </div>
                                 );

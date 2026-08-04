@@ -25,6 +25,7 @@ export interface SelectOption<
     group?: string;
 
     type?: CategoryType;
+    parentCategoryId?: string | null;
 }
 
 interface SelectFieldProps<

@@ -35,6 +35,15 @@ export async function getTransactions(): Promise<TransactionDto[]> {
                     name: true,
                     icon: true,
                     color: true,
+                    parentCategoryId: true,
+                    parent: {
+                        select: {
+                            id: true,
+                            name: true,
+                            icon: true,
+                            color: true,
+                        }
+                    }
                 },
             },
         },

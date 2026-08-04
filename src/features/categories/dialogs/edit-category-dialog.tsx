@@ -33,8 +33,9 @@ export default function EditCategoryDialog({
     children,
 }: EditCategoryDialogProps) {
     const router = useRouter();
-
     const [open, setOpen] = useState(false);
+
+    const isSubcategory = !!category.parentCategoryId;
 
     async function handleUpdate(
         values: CategoryFormInput
@@ -89,9 +90,11 @@ export default function EditCategoryDialog({
                         color:
                             category.color ??
                             "#6366F1",
+                        parentCategoryId: category.parentCategoryId ?? undefined,
                     }}
                     submitLabel="Save Changes"
                     onSubmit={handleUpdate}
+                    isSubcategory={isSubcategory}
                 />
             </DialogContent>
         </Dialog>

@@ -24,6 +24,7 @@ export async function getCategoryDeleteDialogData(
                     id: true,
                     name: true,
                     type: true,
+                    parentCategoryId: true,
                     _count: {
                         select: {
                             transactions: true,
@@ -58,6 +59,7 @@ export async function getCategoryDeleteDialogData(
                     id: category.id,
                     name: category.name,
                     type: category.type,
+                    parentCategoryId: category.parentCategoryId,
                 },
                 transactionCount:
                     category._count.transactions,

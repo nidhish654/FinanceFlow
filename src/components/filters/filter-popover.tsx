@@ -28,7 +28,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-import { PeriodFilter } from "./transaction-toolbar";
+export type PeriodFilter =
+    | "all"
+    | "today"
+    | "week"
+    | "month"
+    | "last-month"
+    | "year"
+    | "custom";
 
 interface CategoryOption {
     id: string;
@@ -40,8 +47,9 @@ interface AccountOption {
     name: string;
 }
 
-interface TransactionFilterPopoverProps {
+interface FilterPopoverProps {
     children: React.ReactNode;
+    showCategory?: boolean;
 
     period: PeriodFilter;
     onPeriodChange: (
@@ -83,8 +91,9 @@ interface TransactionFilterPopoverProps {
     accounts: AccountOption[];
 }
 
-export default function TransactionFilterPopover({
+export default function FilterPopover({
     children,
+    showCategory = true,
     period,
     onPeriodChange,
     type,
@@ -99,7 +108,7 @@ export default function TransactionFilterPopover({
     onDateRangeChange,
     categories,
     accounts,
-}: TransactionFilterPopoverProps) {
+}: FilterPopoverProps) {
 
     const [isMobile, setIsMobile] = useState(false);
 
@@ -234,7 +243,7 @@ export default function TransactionFilterPopover({
 
                     </div>
 
-
+                    {showCategory && (
                         <Select
                             value={category}
                             onValueChange={
@@ -266,7 +275,7 @@ export default function TransactionFilterPopover({
                             </SelectContent>
 
                         </Select>
-
+                    )}
 
                         <Select
                             value={account}

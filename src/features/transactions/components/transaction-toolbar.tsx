@@ -33,16 +33,7 @@ import {
 
 import { TransactionDto } from "../types/transaction";
 
-import TransactionFilterPopover from "./transaction-filter-popover";
-
-export type PeriodFilter =
-    | "all"
-    | "today"
-    | "week"
-    | "month"
-    | "last-month"
-    | "year"
-    | "custom";
+import FilterPopover, { PeriodFilter } from "@/components/filters/filter-popover";
 
 interface CategoryOption {
     id: string;
@@ -527,7 +518,7 @@ export default function TransactionToolbar({
 
             <div className="flex w-full gap-2 md:w-auto">
 
-                <TransactionFilterPopover
+                <FilterPopover
                     period={period}
                     onPeriodChange={
                         onPeriodChange
@@ -575,7 +566,7 @@ export default function TransactionToolbar({
 
                     </Button>
 
-                </TransactionFilterPopover>
+                </FilterPopover>
 
                 <DropdownMenu>
 

@@ -33,11 +33,11 @@ export function buildIncomeAnalysis({
     byAmount,
 }: BuildIncomeAnalysisParams): AnalyticsIncomeAnalysis {
     const incomeSummary = {
-        totalIncome: summary.income,
+        totalIncome: summary.income.current,
 
         averageMonthlyIncome:
             monthly.length > 0
-                ? summary.income /
+                ? summary.income.current /
                 monthly.length
                 : 0,
 

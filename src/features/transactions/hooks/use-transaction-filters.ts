@@ -10,7 +10,7 @@ import {
 } from "date-fns";
 
 import { TransactionDto } from "../types/transaction";
-import { PeriodFilter } from "../components/transaction-toolbar";
+import { PeriodFilter } from "@/components/filters/filter-popover";
 import { endOfDay } from "date-fns";
 
 interface Filters {

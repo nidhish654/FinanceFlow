@@ -59,5 +59,6 @@ export async function getCategoryOptions({
         category.type === "EXPENSE"
             ? "Expense Categories"
             : "Income Categories",
+        parentCategoryId: category.parentCategoryId,
     }));
 }

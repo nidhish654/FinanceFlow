@@ -20,6 +20,8 @@ export const categorySchema = z.object({
     icon: z.string().optional(),
 
     color: z.string().optional(),
+
+    parentCategoryId: z.string().uuid().optional().or(z.literal("")),
 });
 
 export type CategoryFormInput = z.infer<

@@ -3,9 +3,10 @@
 import { AnalyticsView } from "../../../types/analytics-view";
 
 import OverviewSummaryCards from "./overview-summary-cards";
+import OverviewSmartInsights from "./overview-smart-insights";
+import OverviewPeriodComparison from "./overview-period-comparison";
 import OverviewIncomeExpenseChart from "./overview-income-expense-chart";
 import OverviewTopCategories from "./overview-top-categories";
-import OverviewTopMerchants from "./overview-top-merchants";
 
 interface OverviewTabProps {
     analytics: AnalyticsView;
@@ -24,7 +25,20 @@ export default function OverviewTab({
             <OverviewSummaryCards
                 summary={analytics.summary}
                 currency={analytics.currency}
+                periodLabel={analytics.period.label}
             />
+
+            {/* =========================================
+             * Insights
+             * ========================================= */}
+
+            <OverviewSmartInsights insights={analytics.summary.insights} />
+
+            {/* =========================================
+             * Comparisons
+             * ========================================= */}
+
+            {/* <OverviewPeriodComparison summary={analytics.summary} /> */}
 
             {/* =========================================
              * Charts
@@ -40,6 +54,7 @@ export default function OverviewTab({
             >
                 <OverviewIncomeExpenseChart
                     data={analytics.monthlyCashFlow}
+                    summary={analytics.summary}
                     currency={analytics.currency}
                 />
 
@@ -50,14 +65,7 @@ export default function OverviewTab({
 
             </section>
 
-            {/* =========================================
-             * Merchants
-             * ========================================= */}
 
-            <OverviewTopMerchants
-                merchants={analytics.topMerchants}
-                currency={analytics.currency}
-            />
 
         </div>
     );

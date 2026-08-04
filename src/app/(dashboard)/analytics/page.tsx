@@ -8,6 +8,8 @@ import {
 interface AnalyticsPageProps {
     searchParams: Promise<{
         range?: string;
+        start?: string;
+        end?: string;
     }>;
 }
 
@@ -18,9 +20,20 @@ function isAnalyticsRange(value?: string): value is AnalyticsRange {
 export default async function AnalyticsPage({
     searchParams,
 }: AnalyticsPageProps) {
-    const { range } = await searchParams;
+    const { range, start, end } = await searchParams;
     const analyticsRange = isAnalyticsRange(range) ? range : "12M";
-    const analytics = await getAnalyticsView(analyticsRange);
+    
+    // Parse custom dates if provided
+    let customRange = undefined;
+    if (analyticsRange === "CUSTOM" && start && end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+            customRange = { startDate, endDate };
+        }
+    }
+
+    const analytics = await getAnalyticsView(analyticsRange, customRange);
 
     return <AnalyticsPageContent analytics={analytics} />;
 }

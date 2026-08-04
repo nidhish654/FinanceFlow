@@ -112,12 +112,15 @@ export function columns(
                     return "-";
                 }
 
+                const isSubcategory = !!category.parentCategoryId && !!category.parent;
+                const displayCategory = isSubcategory ? category.parent! : category;
+
                 const {
                     icon: Icon,
-                } = getCategoryIcon(category.icon);
+                } = getCategoryIcon(displayCategory.icon);
 
                 const categoryColor =
-                    category.color ?? "#6366F1";
+                    displayCategory.color ?? "#6366F1";
 
                 return (
                     <div className="flex items-center gap-2">
@@ -131,9 +134,16 @@ export function columns(
                             <Icon className="h-4 w-4" />
                         </div>
 
-                        <span className="truncate font-medium">
-                            {category.name}
-                        </span>
+                        <div className="flex flex-col">
+                            <span className="truncate font-medium">
+                                {displayCategory.name}
+                            </span>
+                            {isSubcategory && (
+                                <span className="text-xs text-muted-foreground truncate">
+                                    ↳ {category.name}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 );
             },

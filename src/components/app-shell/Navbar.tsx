@@ -9,8 +9,9 @@ import { SearchBar } from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
 import { NotificationMenu } from "./NotificationMenu";
 import { UserMenu } from "./UserMenu";
+import { UserProfileData } from "@/features/settings/profile/profile.types";
 
-export function Navbar() {
+export function Navbar({ userProfile }: { userProfile: UserProfileData | null }) {
     const toggleCollapse = useSidebar((state) => state.toggleCollapse);
     const openMobile = useSidebar((state) => state.openMobile);
 
@@ -41,7 +42,7 @@ export function Navbar() {
             <div className="flex items-center gap-2">
                 <ThemeToggle />
                 <NotificationMenu />
-                <UserMenu />
+                <UserMenu userProfile={userProfile} />
             </div>
         </header>
     );

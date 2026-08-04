@@ -9,6 +9,8 @@ import {
     getFinanceProfiles,
     requireActiveFinanceProfile,
 } from "@/features/finance-profile/services";
+import { getUserProfile } from "@/features/settings/lib/get-user-profile";
+import { getSettings } from "@/features/settings/services/get-settings";
 interface DashboardLayoutProps {
     children: ReactNode;
 }
@@ -29,11 +31,15 @@ export default async function DashboardLayout({
     }
 
     const activeFinanceProfile = await requireActiveFinanceProfile();
+    const userProfile = await getUserProfile();
+    const settings = await getSettings();
 
     return (
         <AppShell
             financeProfiles={financeProfiles}
             activeFinanceProfile={activeFinanceProfile}
+            userProfile={userProfile}
+            accentColor={settings?.accentColor}
         >
             {children}
         </AppShell>

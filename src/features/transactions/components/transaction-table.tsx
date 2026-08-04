@@ -10,9 +10,8 @@ import TransactionCard from "./transaction-card";
 import TransactionMobileCard from "./transaction-mobile-card";
 import TransactionPagination from "./transaction-pagination";
 import TransactionSummary from "./transaction-summary";
-import TransactionToolbar, {
-    PeriodFilter,
-} from "./transaction-toolbar";
+import TransactionToolbar from "./transaction-toolbar";
+import { PeriodFilter } from "@/components/filters/filter-popover";
 import TransactionEmptyState from "./transaction-empty-state";
 
 import { useTransactionFilters } from "../hooks/use-transaction-filters";

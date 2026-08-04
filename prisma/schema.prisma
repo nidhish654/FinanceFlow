@@ -51,13 +51,44 @@ model FinanceProfile {
 }
 
 model Settings {
-  id               String         @id @default(uuid()) @db.Uuid
-  financeProfileId String         @unique @db.Uuid
-  theme            Theme          @default(SYSTEM)
-  weekStart        WeekStart      @default(MONDAY)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  financeProfile   FinanceProfile @relation(fields: [financeProfileId], references: [id], onDelete: Cascade)
+  id               String @id @default(uuid()) @db.Uuid
+  financeProfileId String @unique @db.Uuid
+
+  // Existing
+  theme     Theme     @default(SYSTEM)
+  weekStart WeekStart @default(MONDAY)
+
+  // New General/Preferences
+  language     Language     @default(ENGLISH)
+  timezone     String       @default("UTC")
+  dateFormat   DateFormat   @default(DD_MM_YYYY)
+  timeFormat   TimeFormat   @default(H24)
+  numberFormat NumberFormat @default(INDIAN)
+
+  // New Financial Defaults
+  defaultAccountId         String?          @db.Uuid
+  defaultExpenseCategoryId String?          @db.Uuid
+  defaultIncomeCategoryId  String?          @db.Uuid
+  defaultTransactionType   TransactionType?
+
+  monthStart           Int                  @default(1)
+  fiscalYear           Month                @default(JANUARY)
+  showDecimals         Boolean              @default(true)
+  negativeNumberFormat NegativeNumberFormat @default(MINUS)
+
+  // New Appearance
+  accentColor       AccentColor @default(DEFAULT)
+  compactMode       Boolean @default(false)
+  reduceMotion      Boolean @default(false)
+  animationsEnabled Boolean @default(true)
+
+  // Avatar Preferences
+  avatarStyle String @default("adventurerNeutral")
+  avatarSeed  String @default("alex")
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  financeProfile FinanceProfile @relation(fields: [financeProfileId], references: [id], onDelete: Cascade)
 
   @@map("settings")
 }
@@ -233,54 +264,52 @@ model Verification {
 }
 
 model Goal {
-  id               String    @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  financeProfileId String    @db.Uuid
+  financeProfileId String @db.Uuid
 
-  name             String
-  icon             String?
+  name String
+  icon String?
 
-  targetAmount     Decimal   @db.Decimal(14, 2)
-  savedAmount      Decimal   @default(0.00) @db.Decimal(14, 2)
+  targetAmount Decimal @db.Decimal(14, 2)
+  savedAmount  Decimal @default(0.00) @db.Decimal(14, 2)
 
-  targetDate       DateTime?
-  notes            String?
+  targetDate DateTime?
+  notes      String?
 
-  displayOrder     Int       @default(0)
+  displayOrder Int @default(0)
 
-  archived         Boolean   @default(false)
-  completedAt      DateTime?
+  archived    Boolean   @default(false)
+  completedAt DateTime?
 
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  financeProfile   FinanceProfile @relation(fields: [financeProfileId], references: [id], onDelete: Cascade)
+  financeProfile FinanceProfile @relation(fields: [financeProfileId], references: [id], onDelete: Cascade)
 
-  history          GoalHistory[]
+  history GoalHistory[]
 
   @@index([financeProfileId])
   @@index([displayOrder])
-
   @@map("goals")
 }
 
 model GoalHistory {
-  id          String            @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  goalId      String            @db.Uuid
+  goalId String @db.Uuid
 
-  amount      Decimal           @db.Decimal(14, 2)
+  amount Decimal @db.Decimal(14, 2)
 
-  type        GoalHistoryType
+  type GoalHistoryType
 
-  note        String?
+  note String?
 
-  createdAt   DateTime          @default(now())
+  createdAt DateTime @default(now())
 
-  goal         Goal             @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
 
   @@index([goalId])
-
   @@map("goal_history")
 }
 
@@ -336,9 +365,60 @@ enum Theme {
   SYSTEM
 }
 
+enum AccentColor {
+  DEFAULT
+  PURPLE
+  BLUE
+  EMERALD
+  ORANGE
+  RED
+  SLATE
+}
+
 enum WeekStart {
   SUNDAY
   MONDAY
+}
+
+enum Language {
+  ENGLISH
+}
+
+enum DateFormat {
+  DD_MM_YYYY
+  MM_DD_YYYY
+  YYYY_MM_DD
+}
+
+enum TimeFormat {
+  H12 // 12-hour
+  H24 // 24-hour
+}
+
+enum NumberFormat {
+  INDIAN // 1,00,000.00
+  WESTERN // 100,000.00
+  EUROPEAN // 100.000,00
+}
+
+enum NegativeNumberFormat {
+  MINUS // -100
+  PARENTHESES // (100)
+}
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
 }
 
 enum SalaryFrequency {

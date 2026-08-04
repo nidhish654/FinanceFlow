@@ -88,6 +88,12 @@ export async function createFinanceProfile(
             })),
         });
 
+        await tx.settings.create({
+            data: {
+                financeProfileId: profile.id,
+            },
+        });
+
         const user = await tx.user.findUnique({
             where: {
                 id: session.user.id,

@@ -19,6 +19,12 @@ export const transactionSchema = z
             .optional()
             .or(z.literal("")),
 
+        subcategoryId: z
+            .string()
+            .uuid()
+            .optional()
+            .or(z.literal("")),
+
         type: z.nativeEnum(TransactionType),
 
         priority: z.nativeEnum(Priority).optional(),

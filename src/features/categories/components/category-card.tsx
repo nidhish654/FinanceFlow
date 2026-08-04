@@ -1,20 +1,27 @@
 "use client";
 
+import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { Category } from "@prisma/client";
 
 import { getCategoryIcon } from "@/lib/category-icons";
 
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 import CategoryActions from "./category-actions";
 
 interface CategoryCardProps {
     category: Category;
+    subcategories?: Category[];
 }
 
 export default function CategoryCard({
     category,
+    subcategories = [],
 }: CategoryCardProps) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
     const {
         icon: Icon,
     } = getCategoryIcon(category.icon);
@@ -27,7 +34,6 @@ export default function CategoryCard({
             className="
                 group
                 relative
-                h-[144px]
                 overflow-hidden
                 rounded-2xl
                 border
@@ -96,6 +102,48 @@ export default function CategoryCard({
                     </p>
                 </div>
             </div>
+
+            {/* Subcategories Toggle & List */}
+            {subcategories.length > 0 && (
+                <div className="mt-4 border-t pt-3 flex flex-col gap-2">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex w-full items-center justify-between px-2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setIsExpanded(!isExpanded)}
+                    >
+                        <div className="flex items-center">
+                            {isExpanded ? (
+                                <ChevronDown className="mr-2 h-4 w-4" />
+                            ) : (
+                                <ChevronRight className="mr-2 h-4 w-4" />
+                            )}
+                            <span className="font-medium">
+                                Subcategories ({subcategories.length})
+                            </span>
+                        </div>
+                    </Button>
+
+                    {isExpanded && (
+                        <div className="flex flex-col gap-3 pt-2">
+                            {subcategories.map((sub) => (
+                                <div
+                                    key={sub.id}
+                                    className="group/sub flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-muted/50 transition-colors"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-muted-foreground/60 text-sm">↳</span>
+                                        <span className="text-sm font-medium">{sub.name}</span>
+                                    </div>
+                                    <div className="opacity-0 group-hover/sub:opacity-100 transition-opacity">
+                                        <CategoryActions category={sub} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </Card>
     );
 }

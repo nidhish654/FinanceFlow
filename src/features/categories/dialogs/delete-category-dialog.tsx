@@ -48,6 +48,7 @@ interface DeleteDialogData {
         id: string;
         name: string;
         type: string;
+        parentCategoryId: string | null;
     };
     transactionCount: number;
     budgetCount: number;
@@ -143,13 +144,15 @@ export default function DeleteCategoryDialog({
         router.refresh();
     }
 
+    const isSubcategory = !!dialogData?.category.parentCategoryId;
+
     const deleteDisabled =
         loading ||
         !dialogData ||
         dialogData.childCount > 0 ||
         dialogData.budgetCount > 0 ||
         (dialogData.transactionCount > 0 &&
-            !replacementCategoryId);
+            !replacementCategoryId && !isSubcategory);
 
     return (
         <AlertDialog
@@ -236,6 +239,11 @@ export default function DeleteCategoryDialog({
                                         {dialogData.transactionCount !== 1 ? "s" : ""}.
                                     </p>
 
+                                    {isSubcategory ? (
+                                        <p className="text-sm text-muted-foreground">
+                                            Transactions will be automatically reassigned to its parent category.
+                                        </p>
+                                    ) : (
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium">
                                             Move transactions to
@@ -302,7 +310,7 @@ export default function DeleteCategoryDialog({
                                             </SelectContent>
                                         </Select>
                                     </div>
-
+                                    )}
                                 </div>
                             )}
                         </>

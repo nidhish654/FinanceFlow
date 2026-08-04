@@ -76,7 +76,7 @@ export default function TransactionForm({
     submitLabel,
     onSubmit,
 }: TransactionFormProps) {
-        const {
+    const {
         register,
         control,
         handleSubmit,
@@ -89,16 +89,17 @@ export default function TransactionForm({
             isSubmitting,
         },
     } = useForm<
-            TransactionFormValues,
-            unknown,
-            TransactionFormInput
-        >({
+        TransactionFormValues,
+        unknown,
+        TransactionFormInput
+    >({
         resolver: zodResolver(transactionSchema),
 
         defaultValues: {
             accountId: "",
             transferAccountId: "",
             categoryId: "",
+            subcategoryId: "",
             type: TransactionType.EXPENSE,
             priority: Priority.NEED,
             amount: undefined,
@@ -114,6 +115,7 @@ export default function TransactionForm({
 
     const transactionType = watch("type");
     const categoryId = watch("categoryId");
+    const subcategoryId = watch("subcategoryId");
 
     const descriptionEdited = useRef(false);
 
@@ -125,9 +127,17 @@ export default function TransactionForm({
         () =>
             categoryOptions.filter(
                 (category) =>
-                    category.type === transactionType
+                    category.type === transactionType && !category.parentCategoryId
             ),
         [categoryOptions, transactionType]
+    );
+
+    const subcategoryOptions = useMemo(
+        () =>
+            categoryOptions.filter(
+                (category) => category.parentCategoryId === categoryId
+            ),
+        [categoryOptions, categoryId]
     );
     console.log({
         transactionType,
@@ -162,6 +172,7 @@ export default function TransactionForm({
         });
     }, [
         categoryId,
+        subcategoryId,
         categoryOptions,
         defaultValues,
         getValues,
@@ -169,7 +180,11 @@ export default function TransactionForm({
         setValue,
     ]);
 
+
+
     const initialized = useRef(false);
+
+    const previousCategoryId = useRef<string | undefined>(categoryId);
 
     useEffect(() => {
         if (!initialized.current) {
@@ -199,6 +214,12 @@ export default function TransactionForm({
             shouldValidate: false,
         });
 
+        setValue("subcategoryId", "", {
+            shouldDirty: true,
+            shouldTouch: false,
+            shouldValidate: false,
+        });
+
         descriptionEdited.current = false;
     }, [
         transactionType,
@@ -212,6 +233,7 @@ export default function TransactionForm({
                 accountId: "",
                 transferAccountId: "",
                 categoryId: "",
+                subcategoryId: "",
                 type: TransactionType.EXPENSE,
                 priority: Priority.NEED,
                 amount: undefined,
@@ -231,13 +253,20 @@ export default function TransactionForm({
     async function submit(
         values: TransactionFormInput
     ) {
-        await onSubmit(values);
+        const finalValues = { ...values };
+        if (finalValues.subcategoryId) {
+            finalValues.categoryId = finalValues.subcategoryId;
+        }
+        delete finalValues.subcategoryId;
+
+        await onSubmit(finalValues as any);
 
         if (!defaultValues) {
             reset({
                 accountId: "",
                 transferAccountId: "",
                 categoryId: "",
+                subcategoryId: "",
                 type: TransactionType.EXPENSE,
                 priority: Priority.NEED,
                 amount: undefined,
@@ -321,124 +350,164 @@ export default function TransactionForm({
                         })}
                     />
                 </FormField>
-                    {isTransfer ? (
+                {isTransfer ? (
+                    <FormField
+                        label="Transfer To"
+                        required
+                        error={errors.transferAccountId?.message}
+                    >
+                        <Controller
+                            control={control}
+                            name="transferAccountId"
+                            render={({ field }) => (
+                                <SelectField
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    placeholder="Select destination account"
+                                    options={accountOptions}
+                                />
+                            )}
+                        />
+                    </FormField>
+                ) : (
+                    <>
                         <FormField
-                            label="Transfer To"
+                            label="Category"
                             required
-                            error={errors.transferAccountId?.message}
+                            error={errors.categoryId?.message}
                         >
                             <Controller
                                 control={control}
-                                name="transferAccountId"
+                                name="categoryId"
                                 render={({ field }) => (
                                     <SelectField
-                                        value={field.value}
-                                        onValueChange={field.onChange}
-                                        placeholder="Select destination account"
-                                        options={accountOptions}
+                                        value={field.value ?? ""}
+                                        onValueChange={(val) => {
+                                            const previous = previousCategoryId.current;
+
+                                            field.onChange(val);
+
+                                            if (
+                                                previous &&
+                                                previous !== val
+                                            ) {
+                                                setValue("subcategoryId", "", {
+                                                    shouldDirty: true,
+                                                    shouldTouch: false,
+                                                    shouldValidate: false,
+                                                });
+                                            }
+
+                                            previousCategoryId.current = val;
+                                        }}
+                                        placeholder="Select category"
+                                        options={filteredCategoryOptions}
                                     />
                                 )}
                             />
                         </FormField>
-                    ) : (
-                        <>
-                            <FormField
-                                label="Category"
-                                required
-                                error={errors.categoryId?.message}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="categoryId"
-                                    render={({ field }) => (
-                                        <SelectField
-                                            value={field.value}
-                                            onValueChange={field.onChange}
-                                            placeholder="Select category"
-                                            options={filteredCategoryOptions}
-                                        />
-                                    )}
-                                />
-                            </FormField>
 
+                        {subcategoryOptions.length > 0 && (
                             <FormField
-                                label="Priority"
-                                required
-                                error={errors.priority?.message}
+                                label="Subcategory"
+                                error={errors.subcategoryId?.message}
                             >
                                 <Controller
                                     control={control}
-                                    name="priority"
+                                    name="subcategoryId"
                                     render={({ field }) => (
                                         <SelectField
                                             value={field.value ?? ""}
                                             onValueChange={field.onChange}
-                                            placeholder="Select priority"
-                                            options={PRIORITY_OPTIONS}
+                                            placeholder="None"
+                                            options={[
+                                                { label: "None", value: "" },
+                                                ...subcategoryOptions
+                                            ]}
                                         />
                                     )}
                                 />
                             </FormField>
+                        )}
 
-                            <FormField
-                                label="Merchant"
-                                error={errors.merchant?.message}
-                            >
-                                <Input
-                                    placeholder="Merchant"
-                                    {...register("merchant")}
-                                />
-                            </FormField>
+                        <FormField
+                            label="Priority"
+                            required
+                            error={errors.priority?.message}
+                        >
+                            <Controller
+                                control={control}
+                                name="priority"
+                                render={({ field }) => (
+                                    <SelectField
+                                        value={field.value ?? ""}
+                                        onValueChange={field.onChange}
+                                        placeholder="Select priority"
+                                        options={PRIORITY_OPTIONS}
+                                    />
+                                )}
+                            />
+                        </FormField>
 
-                            <FormField
-                                label="Reference Number"
-                                error={errors.referenceNumber?.message}
-                            >
-                                <Input
-                                    placeholder="Reference Number"
-                                    {...register("referenceNumber")}
-                                />
-                            </FormField>
-                        </>
-                    )}
+                        <FormField
+                            label="Merchant"
+                            error={errors.merchant?.message}
+                        >
+                            <Input
+                                placeholder="Merchant"
+                                {...register("merchant")}
+                            />
+                        </FormField>
+
+                        <FormField
+                            label="Reference Number"
+                            error={errors.referenceNumber?.message}
+                        >
+                            <Input
+                                placeholder="Reference Number"
+                                {...register("referenceNumber")}
+                            />
+                        </FormField>
+                    </>
+                )}
             </div>
-        {!isTransfer && (
+            {!isTransfer && (
+                <FormField
+                    label="Description"
+                    error={errors.description?.message}
+                >
+                    <Input
+                        placeholder="Description"
+                        {...register("description", {
+                            onChange: () => {
+                                descriptionEdited.current = true;
+                            },
+                        })}
+                    />
+                </FormField>
+            )}
+
             <FormField
-                label="Description"
-                error={errors.description?.message}
+                label="Notes"
+                error={errors.notes?.message}
             >
-                <Input
-                    placeholder="Description"
-                    {...register("description", {
-                        onChange: () => {
-                            descriptionEdited.current = true;
-                        },
-                    })}
+                <Textarea
+                    rows={4}
+                    placeholder="Additional notes..."
+                    {...register("notes")}
                 />
             </FormField>
-        )}
 
-        <FormField
-            label="Notes"
-            error={errors.notes?.message}
-        >
-            <Textarea
-                rows={4}
-                placeholder="Additional notes..."
-                {...register("notes")}
-            />
-        </FormField>
-
-        <div className="flex justify-end">
-            <Button
-                type="submit"
-                disabled={isSubmitting}
-            >
-                {isSubmitting
-                    ? "Saving..."
-                    : submitLabel}
-            </Button>
-        </div>
+            <div className="flex justify-end">
+                <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting
+                        ? "Saving..."
+                        : submitLabel}
+                </Button>
+            </div>
 
         </form>
     );

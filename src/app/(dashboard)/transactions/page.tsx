@@ -53,12 +53,12 @@ export default async function TransactionsPage() {
         })
     );
 
-    const categoryOptions =
-        categories.map((category) => ({
-            value: category.id,
-            label: category.name,
-            type: category.type,
-        }));
+    const categoryOptions = categories.map((category) => ({
+        value: category.id,
+        label: category.name,
+        type: category.type,
+        parentCategoryId: category.parentCategoryId,
+    }));
 
     return (
         <div className="space-y-6">

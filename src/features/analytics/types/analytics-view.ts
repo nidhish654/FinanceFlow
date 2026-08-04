@@ -1,10 +1,12 @@
 import { TransactionDto } from "@/features/transactions/types/transaction";
 
 export const ANALYTICS_RANGES = [
+    "1M",
     "3M",
     "6M",
     "YTD",
     "12M",
+    "CUSTOM",
 ] as const;
 
 export type AnalyticsRange =
@@ -18,19 +20,35 @@ export const ANALYTICS_TABS = [
     "accounts",
     "budgets",
     "goals",
-    "merchants",
+    "categories",
 ] as const;
+
+export interface AnalyticsDateRange {
+    startDate: Date;
+    endDate: Date;
+}
 
 export type AnalyticsTab =
     (typeof ANALYTICS_TABS)[number];
 
+export interface SummaryComparison {
+    current: number;
+    previous: number;
+    change: number;
+    percentage: number;
+    trend: "up" | "down" | "neutral";
+}
+
 export interface AnalyticsSummary {
-    income: number;
-    expense: number;
-    netCashFlow: number;
-    savingsRate: number | null;
-    incomeChange: number | null;
-    expenseChange: number | null;
+    income: SummaryComparison;
+    expense: SummaryComparison;
+    netCashFlow: SummaryComparison;
+    savingsRate: SummaryComparison;
+    highestIncomeMonth: string;
+    highestIncomeAmount: number;
+    highestExpenseMonth: string;
+    highestExpenseAmount: number;
+    insights: string[];
 }
 
 export interface AnalyticsMonthlyPoint {
@@ -44,13 +62,10 @@ export interface AnalyticsCategoryPoint {
     id: string;
     name: string;
     amount: number;
+    subcategories?: { id: string; name: string; amount: number }[];
 }
 
-export interface AnalyticsMerchantPoint {
-    name: string;
-    amount: number;
-    transactionCount: number;
-}
+
 
 export interface AnalyticsExpensePeriod {
     id: string;
@@ -106,8 +121,17 @@ export interface AnalyticsExpenseAnalysis {
     insights: string[];
 }
 
+export interface AnalyticsPeriodInfo {
+    label: string;
+    comparisonLabel: string;
+}
+
 export interface AnalyticsView {
     range: AnalyticsRange;
+
+    customRange?: AnalyticsDateRange;
+
+    period: AnalyticsPeriodInfo;
 
     currency: string;
 
@@ -117,7 +141,7 @@ export interface AnalyticsView {
 
     topCategories: AnalyticsCategoryPoint[];
 
-    topMerchants: AnalyticsMerchantPoint[];
+    transactions: TransactionDto[];
 
     accountAnalysis: AnalyticsAccountAnalysis;
 
@@ -208,9 +232,9 @@ export interface AnalyticsFinancialHealth {
     score: number;
 
     grade: "Excellent"
-        | "Good"
-        | "Fair"
-        | "Poor";
+    | "Good"
+    | "Fair"
+    | "Poor";
 
     reasons: string[];
 }
@@ -362,4 +386,54 @@ export interface AnalyticsGoalAnalysis {
     goals: AnalyticsGoal[];
     needsAttention: AnalyticsGoal[];
     insights: string[];
+}// --- Category Analytics --------------------------------------------------------
+
+export interface CategoryPoint {
+    id: string;
+    name: string;
+    icon: string | null;
+    color: string | null;
+    amount: number;
+    transactionCount: number;
+    subcategories: SubcategoryPoint[];
+    generalAmount: number;
+    generalTransactionCount: number;
+    percentage: number;
+    recentTransactions: TransactionDto[];
 }
+
+export interface SubcategoryPoint {
+    id: string;
+    name: string;
+    amount: number;
+    transactionCount: number;
+}
+
+export interface CategorySummary {
+    categoriesUsed: number;
+    subcategoriesUsed: number;
+    topCategory: { name: string; amount: number } | null;
+    topSubcategory: { name: string; amount: number } | null;
+}
+
+export interface CategoryConcentration {
+    top3Percentage: number;
+    top5Percentage: number;
+    remainingPercentage: number;
+}
+
+export interface CategoryGrowth {
+    mostIncreased: { name: string; percentage: number; oldAmount: number; newAmount: number } | null;
+    mostDecreased: { name: string; percentage: number; oldAmount: number; newAmount: number } | null;
+}
+
+export interface CategoryPeriodAnalysis {
+    summary: CategorySummary;
+    categories: CategoryPoint[];
+    topSubcategories: SubcategoryPoint[];
+    concentration: CategoryConcentration;
+    growth: CategoryGrowth;
+    insights: string[];
+}
+
+
