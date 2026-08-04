@@ -15,44 +15,42 @@ import {
 export interface SettingsState {
     id: string;
     financeProfileId: string;
-    
+
     theme: Theme;
     weekStart: WeekStart;
-    
+
     language: Language;
     timezone: string;
     dateFormat: DateFormat;
     timeFormat: TimeFormat;
     numberFormat: NumberFormat;
-    
+
     defaultAccountId: string | null;
     defaultExpenseCategoryId: string | null;
     defaultIncomeCategoryId: string | null;
     defaultTransactionType: TransactionType | null;
-    
+
     monthStart: number;
     fiscalYear: Month;
     showDecimals: boolean;
     negativeNumberFormat: NegativeNumberFormat;
-    
+
     accentColor: AccentColor;
     compactMode: boolean;
     reduceMotion: boolean;
     animationsEnabled: boolean;
-    
+
     avatarStyle: string;
     avatarSeed: string;
-    
+
     createdAt: Date;
     updatedAt: Date;
 }
 
-export type SettingsSectionId = 
+export type SettingsSectionId =
     | "profile"
     | "preferences"
     | "financial-defaults"
-    | "security"
-    | "data-management"
     | "about";
 
 export interface SidebarItem {

@@ -7,12 +7,14 @@ import CreateTransactionForm from "@/features/transactions/components/create-tra
 
 import { getAccountOptions } from "@/services/options/account-options.service";
 import { getCategoryOptions } from "@/services/options/category-options.service";
+import { getSettings } from "@/features/settings/services/get-settings";
 
 export default async function NewTransactionPage() {
-    const [accountOptions, categoryOptions] =
+    const [accountOptions, categoryOptions, settings] =
         await Promise.all([
             getAccountOptions(),
             getCategoryOptions(),
+            getSettings()
         ]);
 
     return (
@@ -43,6 +45,7 @@ export default async function NewTransactionPage() {
             <CreateTransactionForm
                 accountOptions={accountOptions}
                 categoryOptions={categoryOptions}
+                defaultAccountId={settings?.defaultAccountId}
             />
         </div>
     );

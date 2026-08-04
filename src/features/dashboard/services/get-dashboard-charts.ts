@@ -7,18 +7,23 @@ import {
     CategoryChartPoint,
     CashFlowChartPoint,
 } from "../types/dashboard-view";
+import { SettingsState } from "@/features/settings/types/settings";
+import { getFinancialMonthRange, getFiscalYearRange } from "@/lib/finance/financial-period";
 
 interface GetDashboardChartsParams {
     transactions: TransactionDto[];
+    settings: SettingsState | null;
 }
 
 export function getDashboardCharts({
     transactions,
+    settings,
 }: GetDashboardChartsParams): DashboardCharts {
     const now = new Date();
+    const monthStart = settings?.monthStart || 1;
+    const fiscalStartMonth = settings?.fiscalYear || "JANUARY";
 
-    const currentYear =
-        now.getFullYear();
+    const currentFiscalYear = getFiscalYearRange(now, fiscalStartMonth, monthStart);
 
     /* ========================================
      * Expense By Category
@@ -37,8 +42,8 @@ export function getDashboardCharts({
             return (
                 transaction.type ===
                     TransactionType.EXPENSE &&
-                date.getFullYear() ===
-                    currentYear &&
+                date.getTime() >= currentFiscalYear.start.getTime() &&
+                date.getTime() <= currentFiscalYear.end.getTime() &&
                 transaction.category
             );
         })
@@ -89,7 +94,11 @@ export function getDashboardCharts({
             {
                 length: 12,
             },
-            (_, month) => {
+            (_, monthOffset) => {
+                const targetDate = new Date(currentFiscalYear.start);
+                targetDate.setMonth(targetDate.getMonth() + monthOffset);
+                const { start, end } = getFinancialMonthRange(targetDate, monthStart);
+
                 const monthTransactions =
                     transactions.filter(
                         (transaction) => {
@@ -99,10 +108,8 @@ export function getDashboardCharts({
                                 );
 
                             return (
-                                date.getFullYear() ===
-                                    currentYear &&
-                                date.getMonth() ===
-                                    month
+                                date.getTime() >= start.getTime() &&
+                                date.getTime() <= end.getTime()
                             );
                         }
                     );
@@ -147,10 +154,7 @@ export function getDashboardCharts({
 
                 return {
                     month:
-                        new Date(
-                            currentYear,
-                            month
-                        ).toLocaleString(
+                        start.toLocaleString(
                             "en-US",
                             {
                                 month:
@@ -191,7 +195,13 @@ export function getDashboardCharts({
         )
         // Future months are not a forecast. Showing them creates a misleading
         // flat line after the latest real financial activity.
-        .slice(0, now.getMonth() + 1);
+        .filter((_, index) => {
+            const targetDate = new Date(currentFiscalYear.start);
+            targetDate.setMonth(targetDate.getMonth() + index);
+            const { start } = getFinancialMonthRange(targetDate, monthStart);
+            const { start: currentStart } = getFinancialMonthRange(now, monthStart);
+            return start.getTime() <= currentStart.getTime();
+        });
 
     return {
         expenseByCategory,

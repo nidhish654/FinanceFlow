@@ -50,7 +50,7 @@ export default function LoginForm() {
             if (error) {
                 toast.error(
                     error.message ??
-                        "Invalid email or password."
+                    "Invalid email or password."
                 );
 
                 return;
@@ -67,7 +67,7 @@ export default function LoginForm() {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-5"
+            className="space-y-4"
         >
             <div className="space-y-2">
                 <Label htmlFor="email">
@@ -78,6 +78,7 @@ export default function LoginForm() {
                     id="email"
                     type="email"
                     placeholder="john@example.com"
+                    autoComplete="email"
                     {...register("email")}
                 />
 
@@ -89,13 +90,23 @@ export default function LoginForm() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="password">
-                    Password
-                </Label>
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="password">
+                        Password
+                    </Label>
+
+                    <Link
+                        href="/forgot-password"
+                        className="text-sm font-medium text-primary transition-colors hover:underline"
+                    >
+                        Forgot Password?
+                    </Link>
+                </div>
 
                 <PasswordInput
                     id="password"
                     placeholder="••••••••"
+                    autoComplete="current-password"
                     {...register("password")}
                 />
 
@@ -108,19 +119,19 @@ export default function LoginForm() {
 
             <Button
                 type="submit"
-                className="w-full"
+                className="h-11 w-full"
                 disabled={isPending}
             >
                 {isPending
-                    ? "Signing In..."
+                    ? "Signing you in..."
                     : "Sign In"}
             </Button>
 
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="pt-2 text-center text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <Link
                     href="/register"
-                    className="font-medium text-primary hover:underline"
+                    className="font-semibold text-primary transition-colors hover:underline"
                 >
                     Create Account
                 </Link>

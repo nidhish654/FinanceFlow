@@ -27,7 +27,7 @@ export const SettingsSchema = z.object({
     defaultIncomeCategoryId: z.string().uuid().nullable(),
     defaultTransactionType: z.nativeEnum(TransactionType).nullable(),
 
-    monthStart: z.number().int().min(1).max(31),
+    monthStart: z.number().int().min(1).max(28, "Month start must be between 1 and 28 to support all months safely."),
     fiscalYear: z.nativeEnum(Month),
     showDecimals: z.boolean(),
     negativeNumberFormat: z.nativeEnum(NegativeNumberFormat),

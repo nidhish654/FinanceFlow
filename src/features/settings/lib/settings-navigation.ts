@@ -1,7 +1,7 @@
 import {
     User,
     Palette,
-    Settings as SettingsIcon,
+    Settings2 as SettingsIcon,
     Wallet,
     Shield,
     Database,
@@ -28,18 +28,6 @@ export const SETTINGS_NAVIGATION: SidebarItem[] = [
         label: SETTINGS_SECTIONS["financial-defaults"],
         icon: Wallet,
         href: "?tab=financial-defaults",
-    },
-    {
-        id: "security",
-        label: SETTINGS_SECTIONS.security,
-        icon: Shield,
-        href: "?tab=security",
-    },
-    {
-        id: "data-management",
-        label: SETTINGS_SECTIONS["data-management"],
-        icon: Database,
-        href: "?tab=data-management",
     },
     {
         id: "about",

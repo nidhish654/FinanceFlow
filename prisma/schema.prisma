@@ -20,6 +20,7 @@ model User {
   authAccounts           Account[]
   financeProfiles        FinanceProfile[] @relation("UserFinanceProfiles")
   sessions               Session[]
+  passwordResetTokens    PasswordResetToken[]
   activeFinanceProfile   FinanceProfile?  @relation("ActiveFinanceProfile", fields: [activeFinanceProfileId], references: [id])
 
   @@index([activeFinanceProfileId])
@@ -441,4 +442,19 @@ enum FinanceProfileStatus {
 enum GoalHistoryType {
   DEPOSIT
   WITHDRAWAL
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("password_reset_tokens")
 }

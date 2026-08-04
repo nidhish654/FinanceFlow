@@ -12,11 +12,13 @@ import { TransactionFormInput } from "../schemas/transaction.schema";
 interface CreateTransactionFormProps {
     accountOptions: SelectOption[];
     categoryOptions: SelectOption[];
+    defaultAccountId?: string | null;
 }
 
 export default function CreateTransactionForm({
     accountOptions,
     categoryOptions,
+    defaultAccountId,
 }: CreateTransactionFormProps) {
     const router = useRouter();
 
@@ -41,6 +43,7 @@ export default function CreateTransactionForm({
             categoryOptions={categoryOptions}
             submitLabel="Create Transaction"
             onSubmit={handleSubmit}
+            defaultValues={defaultAccountId ? { accountId: defaultAccountId } : undefined}
         />
     );
 }

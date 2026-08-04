@@ -2,7 +2,11 @@ import { SettingsSectionCard } from "@/features/settings/components/settings-sec
 import { getUserProfile } from "@/features/settings/lib/get-user-profile";
 import { ProfilePage } from "@/features/settings/profile/profile-page";
 import { PreferencePage } from "@/features/settings/preferences/preference-page";
+import { FinancialDefaultPage } from "@/features/settings/financial-defaults/financial-default-page";
+import { AboutPage } from "@/features/settings/about/about-page";
 import { getSettings } from "@/features/settings/services/get-settings";
+import { prisma } from "@/lib/prisma";
+import { getActiveFinanceProfile } from "@/features/finance-profile/services/active-finance-profile.service";
 
 export default async function SettingsPage({
     searchParams,
@@ -61,6 +65,47 @@ export default async function SettingsPage({
                 }} 
             />
         );
+    }
+
+    if (tab === "financial-defaults") {
+        const [settings, activeProfile] = await Promise.all([
+            getSettings(),
+            getActiveFinanceProfile()
+        ]);
+        
+        if (!settings || !activeProfile) {
+            return (
+                <SettingsSectionCard
+                    title="Financial Defaults"
+                    description="Could not load your financial defaults."
+                >
+                    <div className="py-12 text-center text-muted-foreground">
+                        <p>An error occurred while loading your financial defaults.</p>
+                    </div>
+                </SettingsSectionCard>
+            );
+        }
+
+        const accounts = await prisma.financeAccount.findMany({
+            where: { financeProfileId: activeProfile.id },
+            select: { id: true, name: true },
+            orderBy: { name: "asc" }
+        });
+
+        return (
+            <FinancialDefaultPage 
+                initialDefaults={{
+                    defaultAccountId: settings.defaultAccountId,
+                    monthStart: settings.monthStart,
+                    fiscalYear: settings.fiscalYear,
+                }} 
+                accounts={accounts}
+            />
+        );
+    }
+
+    if (tab === "about") {
+        return <AboutPage />;
     }
 
     // Placeholder for unimplemented sections

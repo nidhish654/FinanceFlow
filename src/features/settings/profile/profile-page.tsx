@@ -14,6 +14,7 @@ import { SettingsSaveBar } from "../components/settings-save-bar";
 import { ProfileAvatarCard } from "./components/profile-avatar-card";
 import { ProfileInformationCard } from "./components/profile-information-card";
 import { ProfileAccountInformationCard } from "./components/profile-account-information-card";
+import { ProfileAuthenticationCard } from "./components/profile-authentication-card";
 
 interface ProfilePageProps {
     initialProfile: UserProfileData;
@@ -82,6 +83,8 @@ export function ProfilePage({ initialProfile }: ProfilePageProps) {
             />
 
             <ProfileAccountInformationCard profile={initialProfile} />
+
+            {/* <ProfileAuthenticationCard profile={initialProfile} /> */}
 
             <SettingsSaveBar
                 onSave={handleSave}

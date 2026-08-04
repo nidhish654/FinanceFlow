@@ -12,14 +12,15 @@ import {
     getCurrencyLocale,
 } from "../lib/dashboard-formatters";
 
+import { getFinancialMonthRange } from "@/lib/finance/financial-period";
+import { SettingsState } from "@/features/settings/types/settings";
+
 interface GetDashboardSummaryParams {
     accounts: AccountDto[];
-
     transactions: TransactionDto[];
-
     currency: string;
-
     locale?: string;
+    settings: SettingsState | null;
 }
 
 
@@ -28,24 +29,17 @@ export function getDashboardSummary({
     transactions,
     currency,
     locale = getCurrencyLocale(currency),
+    settings,
 }: GetDashboardSummaryParams): DashboardSummary {
 
     const now = new Date();
-
-    const currentMonth = now.getMonth();
-
-    const currentYear = now.getFullYear();
+    const monthStart = settings?.monthStart || 1;
+    const { start, end } = getFinancialMonthRange(now, monthStart);
 
     const monthlyTransactions =
         transactions.filter((transaction) => {
-
-            const date =
-                new Date(transaction.transactionDate);
-
-            return (
-                date.getMonth() === currentMonth &&
-                date.getFullYear() === currentYear
-            );
+            const date = new Date(transaction.transactionDate);
+            return date.getTime() >= start.getTime() && date.getTime() <= end.getTime();
         });
 
     const monthlyIncome =

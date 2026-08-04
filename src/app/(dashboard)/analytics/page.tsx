@@ -21,8 +21,8 @@ export default async function AnalyticsPage({
     searchParams,
 }: AnalyticsPageProps) {
     const { range, start, end } = await searchParams;
-    const analyticsRange = isAnalyticsRange(range) ? range : "12M";
-    
+    const analyticsRange = isAnalyticsRange(range) ? range : "1M";
+
     // Parse custom dates if provided
     let customRange = undefined;
     if (analyticsRange === "CUSTOM" && start && end) {

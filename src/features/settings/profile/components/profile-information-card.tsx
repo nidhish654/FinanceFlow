@@ -11,6 +11,7 @@ import { SettingsSectionCard } from "../../components/settings-section-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ChangePasswordDialog } from "@/features/auth/components/change-password-dialog";
 
 interface ProfileInformationCardProps {
     profile: UserProfileData;
@@ -85,9 +86,9 @@ export function ProfileInformationCard({
                         ) : (
                             <div className="flex items-center justify-between sm:justify-start sm:gap-8">
                                 <p className="text-base font-medium">{currentDisplayName}</p>
-                                <Button 
-                                    variant="link" 
-                                    size="sm" 
+                                <Button
+                                    variant="link"
+                                    size="sm"
                                     className="h-auto p-0"
                                     onClick={() => setIsEditing(true)}
                                 >
@@ -105,6 +106,18 @@ export function ProfileInformationCard({
                     </div>
                     <div className="sm:col-span-2">
                         <p className="text-base font-medium">{profile.email}</p>
+                    </div>
+                </div>
+                {/* Change Password Section */}
+                <div className="grid grid-cols-1 gap-1 sm:grid-cols-3 sm:gap-4 sm:items-center">
+                    <div className="text-sm font-medium text-muted-foreground">
+                        Password
+                    </div>
+                    <div className="sm:col-span-2 flex items-center justify-between">
+                        <p className="text-base font-medium tracking-widest text-muted-foreground">
+                            ••••••••
+                        </p>
+                        <ChangePasswordDialog />
                     </div>
                 </div>
 

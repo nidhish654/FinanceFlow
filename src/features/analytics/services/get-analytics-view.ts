@@ -36,18 +36,21 @@ const WEEKDAY_LABELS = [
     "Sat",
 ];
 
-function getRangeStart(range: AnalyticsRange, now: Date) {
+import { SettingsState } from "@/features/settings/types/settings";
+import { getFinancialMonthRange, getFiscalYearRange, addFinancialMonths } from "@/lib/finance/financial-period";
+import { Month } from "@prisma/client";
+
+function getRangeStart(range: AnalyticsRange, now: Date, settings: SettingsState | null) {
+    const monthStart = settings?.monthStart || 1;
+    const fiscalYear = settings?.fiscalYear || "JANUARY";
+
     if (range === "YTD") {
-        return new Date(now.getFullYear(), 0, 1);
+        return getFiscalYearRange(now, fiscalYear as Month, monthStart).start;
     }
 
     const monthCount = range === "1M" ? 1 : range === "3M" ? 3 : range === "6M" ? 6 : 12;
-
-    return new Date(
-        now.getFullYear(),
-        now.getMonth() - monthCount + 1,
-        1
-    );
+    const targetDate = addFinancialMonths(now, -(monthCount - 1), monthStart);
+    return getFinancialMonthRange(targetDate, monthStart).start;
 }
 
 import { AnalyticsDateRange } from "../types/analytics-view";
@@ -61,9 +64,12 @@ export async function getAnalyticsView(
     const accounts = await getAccounts();
     const budgets = await getBudgets({ financeProfileId: financeProfile.id });
     const goals = await getGoals({ financeProfileId: financeProfile.id });
+    const { getSettings } = await import("@/features/settings/services/get-settings");
+    const settings = await getSettings();
+    const monthStartDay = settings?.monthStart || 1;
 
     let now = new Date();
-    let start = getRangeStart(range, now);
+    let start = getRangeStart(range, now, settings);
     let previousStart: Date;
     let previousEnd: Date;
 
@@ -74,12 +80,18 @@ export async function getAnalyticsView(
         previousEnd = new Date(start.getTime());
         previousStart = new Date(start.getTime() - duration);
     } else if (range === "YTD") {
-        previousStart = new Date(start.getFullYear() - 1, 0, 1);
-        previousEnd = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        const fiscalYear = settings?.fiscalYear || "JANUARY";
+        const previousYtd = new Date(now);
+        previousYtd.setFullYear(previousYtd.getFullYear() - 1);
+        previousStart = getFiscalYearRange(previousYtd, fiscalYear as Month, monthStartDay).start;
+        const { start: currStart } = getFiscalYearRange(now, fiscalYear as Month, monthStartDay);
+        const diff = now.getTime() - currStart.getTime();
+        previousEnd = new Date(previousStart.getTime() + diff);
     } else {
         const monthSpan = range === "1M" ? 1 : range === "3M" ? 3 : range === "6M" ? 6 : 12;
-        previousStart = new Date(start.getFullYear(), start.getMonth() - monthSpan, 1);
-        previousEnd = new Date(start.getFullYear(), start.getMonth(), 1);
+        const prevTargetDate = addFinancialMonths(start, -monthSpan, monthStartDay);
+        previousStart = getFinancialMonthRange(prevTargetDate, monthStartDay).start;
+        previousEnd = new Date(start.getTime());
     }
 
     const periodTransactions = transactions.filter((transaction) => {
@@ -93,19 +105,14 @@ export async function getAnalyticsView(
     });
 
     const monthlyCashFlow: AnalyticsMonthlyPoint[] = [];
-    const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
+    let cursor1 = new Date(start.getTime());
 
-    while (cursor <= now) {
-        const monthStart = new Date(cursor);
-        const monthEnd = new Date(
-            cursor.getFullYear(),
-            cursor.getMonth() + 1,
-            1
-        );
+    while (cursor1 <= now) {
+        const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor1, monthStartDay);
+        
         const monthTransactions = periodTransactions.filter((transaction) => {
             const date = new Date(transaction.transactionDate);
-
-            return date >= monthStart && date < monthEnd;
+            return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
         });
 
         const income =
@@ -137,7 +144,7 @@ export async function getAnalyticsView(
                 );
 
         monthlyCashFlow.push({
-            month: cursor.toLocaleString("en-US", {
+            month: monthStart.toLocaleString("en-US", {
                 month: "short",
                 year: range === "12M" ? "2-digit" : undefined,
             }),
@@ -146,7 +153,7 @@ export async function getAnalyticsView(
             netCashFlow: income - expense,
         });
 
-        cursor.setMonth(cursor.getMonth() + 1);
+        cursor1 = addFinancialMonths(cursor1, 1, monthStartDay);
     }
 
     const summary = buildSummary({
@@ -192,38 +199,30 @@ export async function getAnalyticsView(
         b.amount - a.amount;
 
     const monthly = [];
-    const monthCursor = new Date(start.getFullYear(), start.getMonth(), 1);
+    let cursor2 = new Date(start.getTime());
 
-    while (monthCursor <= now) {
-        const monthStart = new Date(monthCursor);
-        const monthEnd = new Date(
-            monthCursor.getFullYear(),
-            monthCursor.getMonth() + 1,
-            1
-        );
+    while (cursor2 <= now) {
+        const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor2, monthStartDay);
+        
         const monthTransactions = periodTransactions.filter((transaction) => {
             const date = new Date(transaction.transactionDate);
-
-            return date >= monthStart && date < monthEnd;
+            return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
         });
 
         monthly.push(
             buildExpensePeriod({
-                id: `${monthCursor.getFullYear()}-${monthCursor.getMonth() + 1}`,
-
-                label: monthCursor.toLocaleString(
+                id: `${monthStart.getFullYear()}-${monthStart.getMonth() + 1}`,
+                label: monthStart.toLocaleString(
                     "en-US",
                     {
                         month: "long",
                         year: "numeric",
                     }
                 ),
-
-                transactions:
-                    monthTransactions,
+                transactions: monthTransactions,
             })
         );
-        monthCursor.setMonth(monthCursor.getMonth() + 1);
+        cursor2 = addFinancialMonths(cursor2, 1, monthStartDay);
     }
 
     const weekly = [];
@@ -332,61 +331,25 @@ export async function getAnalyticsView(
         });
 
     const incomeMonthly: AnalyticsIncomePeriod[] = [];
+    let cursor3 = new Date(start.getTime());
 
-    const incomeCursor =
-        new Date(
-            start.getFullYear(),
-            start.getMonth(),
-            1
-        );
+    while (cursor3 <= now) {
+        const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor3, monthStartDay);
 
-    while (incomeCursor <= now) {
-        const monthStart =
-            new Date(incomeCursor);
-
-        const monthEnd =
-            new Date(
-                incomeCursor.getFullYear(),
-                incomeCursor.getMonth() +
-                1,
-                1
-            );
-
-        const monthTransactions =
-            periodTransactions.filter(
-                (transaction) => {
-                    const date =
-                        new Date(
-                            transaction.transactionDate
-                        );
-
-                    return (
-                        date >= monthStart &&
-                        date < monthEnd
-                    );
-                }
-            );
+        const monthTransactions = periodTransactions.filter((transaction) => {
+            const date = new Date(transaction.transactionDate);
+            return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
+        });
 
         incomeMonthly.push(
             buildIncomePeriod({
-                id: `${incomeCursor.getFullYear()}-${incomeCursor.getMonth() + 1}`,
-
-                label: incomeCursor.toLocaleString(
-                    "en-US",
-                    {
-                        month: "long",
-                        year: "numeric",
-                    }
-                ),
-
-                transactions:
-                    monthTransactions,
+                id: `${monthStart.getFullYear()}-${monthStart.getMonth() + 1}`,
+                label: monthStart.toLocaleString("en-US", { month: "long", year: "numeric" }),
+                transactions: monthTransactions,
             })
         );
 
-        incomeCursor.setMonth(
-            incomeCursor.getMonth() + 1
-        );
+        cursor3 = addFinancialMonths(cursor3, 1, monthStartDay);
     }
 
     const quarterly: AnalyticsIncomePeriod[] = [];
@@ -412,68 +375,27 @@ export async function getAnalyticsView(
         });
 
     const cashFlowMonthly: AnalyticsCashFlowPeriod[] = [];
-
     let runningBalance = 0;
+    let cursor4 = new Date(start.getTime());
 
-    const cashFlowCursor = new Date(
-        start.getFullYear(),
-        start.getMonth(),
-        1
-    );
+    while (cursor4 <= now) {
+        const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor4, monthStartDay);
 
-    while (cashFlowCursor <= now) {
+        const monthTransactions = periodTransactions.filter((transaction) => {
+            const date = new Date(transaction.transactionDate);
+            return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
+        });
 
-        const monthStart = new Date(cashFlowCursor);
-
-        const monthEnd = new Date(
-            cashFlowCursor.getFullYear(),
-            cashFlowCursor.getMonth() + 1,
-            1
-        );
-
-        const monthTransactions =
-            periodTransactions.filter((transaction) => {
-
-                const date = new Date(
-                    transaction.transactionDate
-                );
-
-                return (
-                    date >= monthStart &&
-                    date < monthEnd
-                );
-            });
-
-        const period =
-            buildCashFlowPeriod({
-
-                id:
-                    `${cashFlowCursor.getFullYear()}-${cashFlowCursor.getMonth() + 1}`,
-
-                label:
-                    cashFlowCursor.toLocaleString(
-                        "en-US",
-                        {
-                            month: "long",
-                            year: "numeric",
-                        }
-                    ),
-
-                transactions:
-                    monthTransactions,
-
-                openingBalance:
-                    runningBalance,
-            });
+        const period = buildCashFlowPeriod({
+            id: `${monthStart.getFullYear()}-${monthStart.getMonth() + 1}`,
+            label: monthStart.toLocaleString("en-US", { month: "long", year: "numeric" }),
+            transactions: monthTransactions,
+            openingBalance: runningBalance,
+        });
 
         cashFlowMonthly.push(period);
-
-        runningBalance =
-            period.closingBalance;
-
-        cashFlowCursor.setMonth(
-            cashFlowCursor.getMonth() + 1
-        );
+        runningBalance = period.closingBalance;
+        cursor4 = addFinancialMonths(cursor4, 1, monthStartDay);
     }
 
     const cashFlowAnalysis =

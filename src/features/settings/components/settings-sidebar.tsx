@@ -11,7 +11,7 @@ export function SettingsSidebar() {
     const tab = searchParams.get("tab") || "profile";
 
     return (
-        <nav className="hidden w-64 flex-col gap-1 lg:flex text-sm">
+        <nav className="hidden w-48 flex-col gap-1 lg:flex text-sm">
             {SETTINGS_NAVIGATION.map((item) => {
                 const isActive = tab === item.id;
 
