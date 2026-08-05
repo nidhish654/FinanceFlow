@@ -3,7 +3,6 @@
 import { UserProfileData } from "../profile.types";
 import { AvatarSelection } from "../types/avatar";
 import { useUnsavedChanges } from "../../hooks/use-unsaved-changes";
-import { SettingsSectionCard } from "../../components/settings-section-card";
 import { AvatarPickerDialog } from "./avatar-picker-dialog";
 import { AvatarRenderer } from "@/components/ui/avatar-renderer";
 
@@ -20,40 +19,58 @@ export function ProfileAvatarCard({
 }: ProfileAvatarCardProps) {
     const { markDirty } = useUnsavedChanges();
 
-    // Use either the uncommitted selection, or the saved profile setting
     const currentAvatar: AvatarSelection = avatar || {
         style: profile.avatarStyle,
         seed: profile.avatarSeed,
     };
 
-    const handleSelectAvatar = (selection: AvatarSelection) => {
+    const handleSelectAvatar = (
+        selection: AvatarSelection
+    ) => {
         setAvatar(selection);
         markDirty();
     };
 
+    const joinedDate = new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        year: "numeric",
+    }).format(new Date(profile.memberSince));
+
     return (
-        <SettingsSectionCard
-            title="Avatar"
-            description=""
-        >
-            <div className="flex flex-col items-center gap-6 pt-2 sm:flex-row sm:items-start">
-                <AvatarRenderer
-                    avatar={currentAvatar}
-                    fallbackName={profile.displayName}
-                    className="h-24 w-24 sm:h-24 sm:w-24"
-                />
+        <div className="flex h-full flex-col items-center justify-center px-8 py-8 text-center">
+            <AvatarRenderer
+                avatar={currentAvatar}
+                fallbackName={profile.displayName}
+                className="sm:h-32 sm:w-32 h-24 w-24"
+            />
 
-                <div className="flex flex-col items-center gap-2 sm:items-start sm:justify-center sm:pt-4">
-                    <p className="text-lg font-semibold">{profile.displayName}</p>
-                    <p className="mb-2 text-sm text-muted-foreground">Current Avatar</p>
+            <div className="mt-6 space-y-2">
+                <h3 className="text-2xl font-semibold tracking-tight">
+                    {profile.displayName}
+                </h3>
 
-                    <AvatarPickerDialog
-                        currentSeed={currentAvatar.seed}
-                        currentStyle={currentAvatar.style}
-                        onSelect={handleSelectAvatar}
-                    />
-                </div>
+                {/* <p className="text-sm text-muted-foreground break-all">
+                    {profile.email}
+                </p> */}
             </div>
-        </SettingsSectionCard>
+
+            <div className="mt-6 space-y-1">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Member Since
+                </p>
+
+                <p className="text-sm font-medium">
+                    {joinedDate}
+                </p>
+            </div>
+
+            <div className="mt-8">
+                <AvatarPickerDialog
+                    currentSeed={currentAvatar.seed}
+                    currentStyle={currentAvatar.style}
+                    onSelect={handleSelectAvatar}
+                />
+            </div>
+        </div>
     );
 }

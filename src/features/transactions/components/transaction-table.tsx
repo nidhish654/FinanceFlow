@@ -24,6 +24,8 @@ interface TransactionTableProps {
 
     accountOptions: SelectOption[];
     categoryOptions: SelectOption[];
+    rawAccounts: any[];
+    rawCategories: any[];
 }
 
 export default function TransactionTable({
@@ -31,6 +33,8 @@ export default function TransactionTable({
     currentBalance,
     accountOptions,
     categoryOptions,
+    rawAccounts,
+    rawCategories,
 }: TransactionTableProps) {
     const [search, setSearch] = useState("");
 
@@ -169,6 +173,8 @@ export default function TransactionTable({
                     setAccount
                 }
                 accounts={accounts}
+                allCategories={rawCategories}
+                allAccounts={rawAccounts}
                 view={view}
                 onViewChange={setView}
                 priority={priority}

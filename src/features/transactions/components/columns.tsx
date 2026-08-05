@@ -26,7 +26,7 @@ function priorityVariant(priority: Priority | null) {
             return "secondary";
 
         case Priority.SAVINGS:
-            return "default";
+            return "success";
 
         default:
             return "outline";

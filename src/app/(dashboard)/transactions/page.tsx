@@ -90,6 +90,8 @@ export default async function TransactionsPage() {
                     currentBalance={currentBalance}
                     accountOptions={accountOptions}
                     categoryOptions={categoryOptions}
+                    rawAccounts={accounts}
+                    rawCategories={categories}
                 />
             )}
         </div>

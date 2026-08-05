@@ -7,6 +7,7 @@ export type TransactionWithRelations =
                 select: {
                     id: true;
                     name: true;
+                    type: true;
                 };
             };
 
@@ -21,6 +22,7 @@ export type TransactionWithRelations =
                 select: {
                     id: true;
                     name: true;
+                    type: true;
                     icon: true;
                     color: true;
                     parentCategoryId: true;

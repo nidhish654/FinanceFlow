@@ -32,7 +32,7 @@ const formSchema = z.object({
     path: ["confirmPassword"],
 });
 
-export function ChangePasswordDialog() {
+export function ChangePasswordDialog({ trigger }: { trigger?: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
 
@@ -89,7 +89,7 @@ export function ChangePasswordDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">Change Password</Button>
+                {trigger || <Button variant="outline">Change Password</Button>}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import {
     Card,
     CardContent,
@@ -14,6 +15,7 @@ interface SettingsSectionCardProps {
     description: string;
     children: React.ReactNode;
     footer?: React.ReactNode;
+    className?: string;
 }
 
 export function SettingsSectionCard({
@@ -21,9 +23,10 @@ export function SettingsSectionCard({
     description,
     children,
     footer,
+    className,
 }: SettingsSectionCardProps) {
     return (
-        <Card className="rounded-2xl border shadow-sm">
+        <Card className={cn("rounded-2xl border shadow-sm", className)}>
             <CardHeader className="space-y-1">
                 <CardTitle className="text-xl">{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>

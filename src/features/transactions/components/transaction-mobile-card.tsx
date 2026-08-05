@@ -26,7 +26,7 @@ function priorityVariant(priority: Priority | null) {
             return "secondary";
 
         case Priority.SAVINGS:
-            return "default";
+            return "success";
 
         default:
             return "outline";
@@ -126,7 +126,7 @@ export default function TransactionMobileCard({
                     className="h-6 px-2 text-xs"
                 >
                     {transaction.type ===
-                    TransactionType.TRANSFER
+                        TransactionType.TRANSFER
                         ? "Transfer"
                         : transaction.category?.name ??
                         "-"}

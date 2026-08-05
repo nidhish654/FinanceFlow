@@ -34,15 +34,15 @@ import {
 import { TransactionDto } from "../types/transaction";
 
 import FilterPopover, { PeriodFilter } from "@/components/filters/filter-popover";
+import { ImportCSVDialog } from "../import/components/import-csv-dialog";
 
-interface CategoryOption {
+import { CategoryOption } from "@/features/categories/lib/category-utils";
+import { AccountType } from "@prisma/client";
+
+export interface AccountOption {
     id: string;
     name: string;
-}
-
-interface AccountOption {
-    id: string;
-    name: string;
+    type: AccountType;
 }
 
 interface TransactionToolbarProps {
@@ -82,8 +82,8 @@ interface TransactionToolbarProps {
     ) => void;
 
     dateRange:
-        | DateRange
-        | undefined;
+    | DateRange
+    | undefined;
 
     onDateRangeChange: (
         value:
@@ -93,6 +93,8 @@ interface TransactionToolbarProps {
 
     categories: CategoryOption[];
     accounts: AccountOption[];
+    allCategories: CategoryOption[];
+    allAccounts: AccountOption[];
 }
 
 export default function TransactionToolbar({
@@ -125,6 +127,8 @@ export default function TransactionToolbar({
 
     categories,
     accounts,
+    allCategories,
+    allAccounts,
 
 }: TransactionToolbarProps) {
 
@@ -141,7 +145,7 @@ export default function TransactionToolbar({
         priority !== "all",
 
         period === "custom" &&
-            dateRange,
+        dateRange,
 
     ].filter(Boolean).length;
 
@@ -233,7 +237,7 @@ export default function TransactionToolbar({
                         ) =>
                             `"${String(
                                 row[
-                                    header as keyof typeof row
+                                header as keyof typeof row
                                 ]
                             ).replace(
                                 /"/g,
@@ -299,7 +303,7 @@ export default function TransactionToolbar({
                     ...rows.map((row) =>
                         String(
                             row[
-                                key as keyof typeof row
+                            key as keyof typeof row
                             ] ?? ""
                         ).length
                     )
@@ -496,11 +500,11 @@ export default function TransactionToolbar({
     };
 
     return (
-            <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
+        <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
 
             {/* Search */}
 
-            <div className="w-full md:min-w-65 md:flex-1">
+            <div className="w-full md:min-w-60 md:flex-1">
 
                 <Input
                     placeholder="Search transactions..."
@@ -567,6 +571,8 @@ export default function TransactionToolbar({
                     </Button>
 
                 </FilterPopover>
+
+                <ImportCSVDialog categories={allCategories} accounts={allAccounts} />
 
                 <DropdownMenu>
 
