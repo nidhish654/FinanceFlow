@@ -2,27 +2,13 @@
 
 import { useState } from "react";
 
-import {
-    MoreVertical,
-    Pencil,
-    Trash2,
-} from "lucide-react";
-
 import DataCard from "@/components/common/DataCard";
 import CurrencyAmount from "@/components/common/CurrencyAmount";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import EditAccountDialog from "./edit-account-dialog";
-import DeleteAccountDialog from "./delete-account-dialog";
+import AccountActions from "./account-actions";
 
 import { AccountDto } from "../types/account";
 import { getAccountTypeConfig } from "../constants/account-icons";
@@ -43,13 +29,10 @@ export default function AccountCard({
 }: AccountCardProps) {
     const { icon: Icon, iconClassName } = getAccountTypeConfig(account.type);
 
-    const [editOpen, setEditOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
-
     return (
         <>
             <DataCard
-                className="
+                className={`
                     group
                     w-full
                     overflow-hidden
@@ -60,7 +43,8 @@ export default function AccountCard({
                     hover:-translate-y-1
                     hover:border-primary/30
                     hover:shadow-lg
-                "
+                    ${account.isArchived ? "opacity-60 grayscale-[0.5]" : ""}
+                `}
             >
                 <div className="flex h-full flex-col p-1">
                     {/* Header */}
@@ -79,44 +63,19 @@ export default function AccountCard({
                                 <Icon className="h-5 w-5" />
                             </div>
 
-                            <div className="min-w-0">
+                            <div className="min-w-0 flex items-center gap-2">
                                 <h3 className="truncate text-xl font-semibold">
                                     {account.name}
                                 </h3>
+                                {account.isArchived && (
+                                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wider px-1.5 py-0">
+                                        Archived
+                                    </Badge>
+                                )}
                             </div>
                         </div>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 shrink-0 rounded-lg"
-                                >
-                                    <MoreVertical className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent
-                                align="end"
-                                className="w-40"
-                            >
-                                <DropdownMenuItem
-                                    onClick={() => setEditOpen(true)}
-                                >
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Edit
-                                </DropdownMenuItem>
-
-                                <DropdownMenuItem
-                                    className="text-destructive focus:text-destructive"
-                                    onClick={() => setDeleteOpen(true)}
-                                >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <AccountActions account={account} />
                     </div>
 
                     {/* Balance */}
@@ -155,18 +114,6 @@ export default function AccountCard({
                 </div>
             </DataCard>
 
-            <EditAccountDialog
-                open={editOpen}
-                onOpenChange={setEditOpen}
-                account={account}
-            />
-
-            <DeleteAccountDialog
-                open={deleteOpen}
-                onOpenChange={setDeleteOpen}
-                accountId={account.id}
-                accountName={account.name}
-            />
         </>
     );
 }

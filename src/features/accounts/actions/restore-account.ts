@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+
 import { requireActiveFinanceProfile } from "@/features/finance-profile/services";
 
-export async function deleteAccount(id: string) {
+export async function restoreAccount(id: string) {
     try {
         const financeProfile = await requireActiveFinanceProfile();
 
@@ -13,14 +14,6 @@ export async function deleteAccount(id: string) {
             where: {
                 id,
                 financeProfileId: financeProfile.id,
-            },
-            include: {
-                _count: {
-                    select: {
-                        outgoingTransactions: true,
-                        incomingTransfers: true,
-                    },
-                },
             },
         });
 
@@ -31,19 +24,12 @@ export async function deleteAccount(id: string) {
             };
         }
 
-        const transactionCount = account._count.outgoingTransactions + account._count.incomingTransfers;
-
-        if (transactionCount > 0) {
-            return {
-                success: false,
-                reason: "HAS_TRANSACTIONS",
-                message: `This account contains ${transactionCount} transactions.`,
-            };
-        }
-
-        await prisma.financeAccount.delete({
+        await prisma.financeAccount.update({
             where: {
                 id,
+            },
+            data: {
+                isArchived: false,
             },
         });
 
@@ -55,14 +41,14 @@ export async function deleteAccount(id: string) {
 
         return {
             success: true,
-            message: "Account deleted successfully.",
+            message: "Account restored successfully.",
         };
     } catch (error) {
         console.error(error);
 
         return {
             success: false,
-            message: "Failed to delete account.",
+            message: "Failed to restore account.",
         };
     }
 }

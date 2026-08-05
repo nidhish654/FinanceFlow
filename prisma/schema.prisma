@@ -102,7 +102,7 @@ model FinanceAccount {
   type                 AccountType
   currency             Currency?
   openingBalance       Decimal        @db.Decimal(12, 2)
-  status               AccountStatus  @default(ACTIVE)
+  isArchived           Boolean        @default(false)
   color                String?
   icon                 String?
   createdAt            DateTime       @default(now())
@@ -323,10 +323,7 @@ enum AccountType {
   INVESTMENT
 }
 
-enum AccountStatus {
-  ACTIVE
-  ARCHIVED
-}
+
 
 enum TransactionType {
   INCOME

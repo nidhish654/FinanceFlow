@@ -13,7 +13,6 @@ export async function getAccounts(): Promise<AccountDto[]> {
     const accounts = await prisma.financeAccount.findMany({
         where: {
             financeProfileId: financeProfile.id,
-            status: "ACTIVE",
         },
 
         orderBy: {
@@ -66,6 +65,7 @@ export async function getAccounts(): Promise<AccountDto[]> {
             openingBalance,
             currentBalance: balance.currentBalance,
             transactionCount: balance.transactionCount,
+            isArchived: account.isArchived,
         };
 
         // console.log(dto);

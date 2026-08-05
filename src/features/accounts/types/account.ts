@@ -12,4 +12,5 @@ export interface AccountDto {
 
     currentBalance: number;
     transactionCount: number;
+    isArchived: boolean;
 }
