@@ -11,7 +11,7 @@
 <p align="center">
   <a href="YOUR_VERCEL_URL">Live Demo</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="YOUR_GOOGLE_DOC_LINK">User Documentation</a>
+  <a href="https://docs.google.com/document/d/1lszopAGmP5ZSsPd-kSCSX8ymzYdLY-icVeLNawrpdQE/edit?usp=sharing">User Documentation</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="https://github.com/nidhish654/FinanceFlow">GitHub Repository</a>
 </p>
