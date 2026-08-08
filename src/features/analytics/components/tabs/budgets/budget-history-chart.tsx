@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 
 import { AnalyticsBudgetMonth } from "@/features/analytics/types/analytics-view";
-import { formatCurrency } from "@/features/dashboard/lib/dashboard-formatters";
+import { formatCurrency } from "@/lib/formatters";
 
 interface BudgetHistoryChartProps {
     monthly: AnalyticsBudgetMonth[];

@@ -14,6 +14,7 @@ import { getBudgets } from "@/features/planning/budget/queries/get-budgets";
 import { buildBudgetAnalysis } from "../builders/build-budget-analysis";
 import { getGoals } from "@/features/planning/goal/queries/get-goals";
 import { buildGoalAnalysis } from "../builders/build-goal-analysis";
+import { buildCategoryAnalysis } from "../builders/build-category-analysis";
 
 
 import {
@@ -23,6 +24,7 @@ import {
     AnalyticsView,
     AnalyticsIncomePeriod,
     AnalyticsCashFlowPeriod,
+    CategoryPeriodAnalysis,
 } from "../types/analytics-view";
 import { buildSummary } from "../builders/build-summary";
 
@@ -77,8 +79,13 @@ export async function getAnalyticsView(
         start = customRange.startDate;
         now = customRange.endDate;
         const duration = now.getTime() - start.getTime();
-        previousEnd = new Date(start.getTime());
-        previousStart = new Date(start.getTime() - duration);
+
+        previousEnd = new Date(start.getTime() - 1);
+
+        previousStart =
+            new Date(
+                previousEnd.getTime() - duration
+            );
     } else if (range === "YTD") {
         const fiscalYear = settings?.fiscalYear || "JANUARY";
         const previousYtd = new Date(now);
@@ -109,7 +116,7 @@ export async function getAnalyticsView(
 
     while (cursor1 <= now) {
         const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor1, monthStartDay);
-        
+
         const monthTransactions = periodTransactions.filter((transaction) => {
             const date = new Date(transaction.transactionDate);
             return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
@@ -203,7 +210,7 @@ export async function getAnalyticsView(
 
     while (cursor2 <= now) {
         const { start: monthStart, end: monthEnd } = getFinancialMonthRange(cursor2, monthStartDay);
-        
+
         const monthTransactions = periodTransactions.filter((transaction) => {
             const date = new Date(transaction.transactionDate);
             return date.getTime() >= monthStart.getTime() && date.getTime() <= monthEnd.getTime();
@@ -427,6 +434,12 @@ export async function getAnalyticsView(
         currency: financeProfile.baseCurrency,
     });
 
+    const categoryAnalysis = buildCategoryAnalysis(
+        periodTransactions,
+        previousTransactions,
+        financeProfile.baseCurrency
+    );
+
     let periodLabel = "";
     let comparisonLabel = "";
 
@@ -474,6 +487,7 @@ export async function getAnalyticsView(
         },
 
         currency: financeProfile.baseCurrency,
+        financeProfileId: financeProfile.id,
 
         summary,
 
@@ -484,7 +498,7 @@ export async function getAnalyticsView(
         )
             .sort((a, b) => b.amount - a.amount)
             .slice(0, 5),
-        transactions: periodTransactions,
+
 
         accountAnalysis,
 
@@ -497,5 +511,11 @@ export async function getAnalyticsView(
         cashFlowAnalysis,
 
         goalAnalysis,
+
+        categoryAnalysis,
+
+        allTransactions: periodTransactions,
+
+        allPreviousTransactions: previousTransactions,
     };
 }

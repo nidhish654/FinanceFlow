@@ -60,7 +60,7 @@ export default function RegisterForm() {
             if (error) {
                 toast.error(
                     error.message ??
-                        "Unable to create account."
+                    "Unable to create account."
                 );
 
                 return;
@@ -70,7 +70,7 @@ export default function RegisterForm() {
                 "Account created successfully."
             );
 
-            router.push("/");
+            router.replace("/finance-profile/onboarding");
         });
     };
 

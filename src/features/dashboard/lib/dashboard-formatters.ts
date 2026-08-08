@@ -1,3 +1,5 @@
+import { formatCurrency as globalFormatCurrency, getLocaleForCurrency } from "@/lib/formatters";
+
 /**
  * Returns the preferred locale
  * for a given currency.
@@ -5,16 +7,7 @@
 export function getCurrencyLocale(
     currency: string
 ): string {
-    switch (currency) {
-        case "JPY":
-            return "ja-JP";
-
-        case "INR":
-            return "en-IN";
-
-        default:
-            return "en-US";
-    }
+    return getLocaleForCurrency(currency);
 }
 
 /**
@@ -27,18 +20,7 @@ export function formatCurrency(
         currency
     )
 ): string {
-    return new Intl.NumberFormat(
-        locale,
-        {
-            style: "currency",
-
-            currency,
-
-            minimumFractionDigits: 0,
-
-            maximumFractionDigits: 2,
-        }
-    ).format(amount);
+    return globalFormatCurrency(amount, currency);
 }
 
 /**

@@ -60,14 +60,14 @@ export default function LoginForm() {
                 "Logged in successfully."
             );
 
-            router.push("/");
+            router.replace("/dashboard");
         });
     };
 
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4"
+            className="space-y-4 mb-4"
         >
             <div className="space-y-2">
                 <Label htmlFor="email">

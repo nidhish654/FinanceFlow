@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { HandCoins } from "lucide-react";
 
 import { SelectOption } from "@/components/forms/SelectField";
 import { Separator } from "@/components/ui/separator";
@@ -110,23 +111,42 @@ export default function BudgetPageContent({
                 <div
                     className="
                         flex
+                        min-h-[420px]
                         flex-col
                         items-center
                         justify-center
-                        rounded-xl
+                        rounded-2xl
                         border
                         border-dashed
-                        py-20
+                        bg-muted/20
+                        px-6
                         text-center
                     "
                 >
-                    <h3 className="text-lg font-semibold">
-                        No Budgets Found
-                    </h3>
+                    <div
+                        className="
+                            mb-6
+                            rounded-full
+                            bg-primary/10
+                            p-4
+                        "
+                    >
+                        <HandCoins className="h-10 w-10 text-primary" />
+                    </div>
 
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        No budgets match the selected
-                        filter.
+                    <h2 className="text-xl font-semibold">
+                        Create your budget
+                    </h2>
+
+                    <p
+                        className="
+                            mt-2
+                            max-w-md
+                            text-sm
+                            text-muted-foreground
+                        "
+                    >
+
                     </p>
                 </div>
             ) : (

@@ -49,7 +49,12 @@ interface AccountOption {
 
 interface FilterPopoverProps {
     children: React.ReactNode;
+    showPeriod?: boolean;
+    showType?: boolean;
     showCategory?: boolean;
+    showAccount?: boolean;
+    showPriority?: boolean;
+    showSavingsPriority?: boolean
 
     period: PeriodFilter;
     onPeriodChange: (
@@ -77,8 +82,8 @@ interface FilterPopoverProps {
     ) => void;
 
     dateRange:
-        | DateRange
-        | undefined;
+    | DateRange
+    | undefined;
 
     onDateRangeChange: (
         value:
@@ -94,6 +99,12 @@ interface FilterPopoverProps {
 export default function FilterPopover({
     children,
     showCategory = true,
+    showPeriod = true,
+    showType = true,
+    showAccount = true,
+    showPriority = true,
+    showSavingsPriority = true,
+
     period,
     onPeriodChange,
     type,
@@ -161,6 +172,7 @@ export default function FilterPopover({
                 </div>
                 <div className="flex flex-col gap-4">
 
+                    {showPeriod && (
                         <Select
                             value={period}
                             onValueChange={(value) =>
@@ -206,41 +218,41 @@ export default function FilterPopover({
 
                             </SelectContent>
                         </Select>
+                    )}
 
+                    <div className="flex flex-col gap-4">
+                        {showType && (
+                            <Select
+                                value={type}
+                                onValueChange={onTypeChange}
+                            >
+                                <SelectTrigger className="h-10">
+                                    <Wallet className="mr-2 h-4 w-4 text-muted-foreground" />
+                                    <SelectValue />
+                                </SelectTrigger>
 
-                        <div className="flex flex-col gap-4">
+                                <SelectContent>
 
-                        <Select
-                            value={type}
-                            onValueChange={onTypeChange}
-                        >
-                            <SelectTrigger className="h-10">
-                                <Wallet className="mr-2 h-4 w-4 text-muted-foreground" />
-                                <SelectValue />
-                            </SelectTrigger>
+                                    <SelectItem value="all">
+                                        All Types
+                                    </SelectItem>
 
-                            <SelectContent>
+                                    <SelectItem value="INCOME">
+                                        Income
+                                    </SelectItem>
 
-                                <SelectItem value="all">
-                                    All Types
-                                </SelectItem>
+                                    <SelectItem value="EXPENSE">
+                                        Expense
+                                    </SelectItem>
 
-                                <SelectItem value="INCOME">
-                                    Income
-                                </SelectItem>
+                                    <SelectItem value="TRANSFER">
+                                        Transfer
+                                    </SelectItem>
 
-                                <SelectItem value="EXPENSE">
-                                    Expense
-                                </SelectItem>
+                                </SelectContent>
 
-                                <SelectItem value="TRANSFER">
-                                    Transfer
-                                </SelectItem>
-
-                            </SelectContent>
-
-                        </Select>
-
+                            </Select>
+                        )}
                     </div>
 
                     {showCategory && (
@@ -277,6 +289,7 @@ export default function FilterPopover({
                         </Select>
                     )}
 
+                    {showAccount && (
                         <Select
                             value={account}
                             onValueChange={
@@ -308,7 +321,9 @@ export default function FilterPopover({
                             </SelectContent>
 
                         </Select>
+                    )}
 
+                    {showPriority && (
                         <Select
                             value={priority}
                             onValueChange={
@@ -334,90 +349,107 @@ export default function FilterPopover({
                                     Want
                                 </SelectItem>
 
-                                <SelectItem value="SAVINGS">
-                                    Savings
-                                </SelectItem>
+                                {showSavingsPriority && (
+                                    <SelectItem value="SAVINGS">
+                                        Savings
+                                    </SelectItem>
+                                )}
 
                             </SelectContent>
 
-                         </Select>
-                        </div>
-                        {period === "custom" && (
-                            <Popover>
+                        </Select>
+                    )}
+                </div>
+                {period === "custom" && (
+                    <Popover>
 
-                                <PopoverTrigger asChild>
+                        <PopoverTrigger asChild>
 
-                                    <Button
-                                        variant="outline"
-                                        className="w-full justify-between"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <CalendarDays className="h-4 w-4" />
+                            <Button
+                                variant="outline"
+                                className="w-full justify-between"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <CalendarDays className="h-4 w-4" />
 
-                                            {dateRange?.from ? (
-                                                dateRange.to ? (
-                                                    <>
-                                                        {format(dateRange.from, "dd MMM")} -{" "}
-                                                        {format(dateRange.to, "dd MMM")}
-                                                    </>
-                                                ) : (
-                                                    format(dateRange.from, "dd MMM")
-                                                )
-                                            ) : (
-                                                "Select Date Range"
-                                            )}
-                                        </div>
+                                    {dateRange?.from ? (
+                                        dateRange.to ? (
+                                            <>
+                                                {format(dateRange.from, "dd MMM")} -{" "}
+                                                {format(dateRange.to, "dd MMM")}
+                                            </>
+                                        ) : (
+                                            format(dateRange.from, "dd MMM")
+                                        )
+                                    ) : (
+                                        "Select Date Range"
+                                    )}
+                                </div>
 
-                                        <ChevronDown className="h-4 w-4 opacity-60" />
+                                <ChevronDown className="h-4 w-4 opacity-60" />
 
-                                    </Button>
+                            </Button>
 
-                                </PopoverTrigger>
+                        </PopoverTrigger>
 
-                                <PopoverContent
-                                    align="start"
-                                    className="w-auto p-0"
-                                >
+                        <PopoverContent
+                            align="start"
+                            className="w-auto p-0"
+                        >
 
-                                    <Calendar
-                                        mode="range"
-                                        selected={dateRange}
-                                        onSelect={onDateRangeChange}
-                                        numberOfMonths={isMobile ? 1 : 2}
-                                        captionLayout="dropdown"
-                                    />
+                            <Calendar
+                                mode="range"
+                                selected={dateRange}
+                                onSelect={onDateRangeChange}
+                                numberOfMonths={isMobile ? 1 : 2}
+                                captionLayout="dropdown"
+                            />
 
-                                </PopoverContent>
+                        </PopoverContent>
 
-                            </Popover>
-                        )}
+                    </Popover>
+                )}
                 <div className="mt-6 flex items-center justify-between border-t pt-4">
 
-                <Button
-                    type="button"
-                    variant="outline"
-                    className="gap-2"
-                    onClick={() => {
-                        onPeriodChange("all");
-                        onTypeChange("all");
-                        onCategoryChange("all");
-                        onAccountChange("all");
-                        onPriorityChange("all");
-                        onDateRangeChange(undefined);
-                    }}
-                >
-                    <RotateCcw className="h-4 w-4" />
-                    Reset Filters
-                </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="gap-2"
+                        onClick={() => {
+                            if (showPeriod) {
+                                onPeriodChange("all");
+                                onDateRangeChange(undefined);
+                            }
 
-                <Button
-                    type="button"
-                    onClick={() => setOpen(false)}
-                >
-                    Close
-                </Button>
+                            if (showType) {
+                                onTypeChange("all");
+                            }
 
-            </div>
+                            if (showCategory) {
+                                onCategoryChange("all");
+                            }
+
+                            if (showAccount) {
+                                onAccountChange("all");
+                            }
+
+                            if (showPriority) {
+                                onPriorityChange("all");
+                            }
+                        }}
+                    >
+                        <RotateCcw className="h-4 w-4" />
+                        Reset Filters
+                    </Button>
+
+                    <Button
+                        type="button"
+                        onClick={() => setOpen(false)}
+                    >
+                        Close
+                    </Button>
+
+                </div>
 
             </PopoverContent>
 

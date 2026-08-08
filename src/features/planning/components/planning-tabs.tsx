@@ -30,7 +30,7 @@ export default function PlanningTabs<T extends string = string>({
                 className
             )}
         >
-            <div className="flex w-max min-w-full items-center gap-3 lg:justify-end">
+            <div className="flex w-max min-w-full items-center justify-center gap-3 lg:justify-end">
                 {tabs.map((tab, index) => {
                     const selected = value === tab.value;
 
@@ -45,7 +45,7 @@ export default function PlanningTabs<T extends string = string>({
                                     onValueChange(tab.value)
                                 }
                                 className={cn(
-                                    "relative whitespace-nowrap pb-2 text-2xl font-semibold transition-colors lg:text-4xl",
+                                    "relative whitespace-nowrap pb-2 text-2xl font-semibold transition-colors lg:text-3xl",
                                     selected
                                         ? "text-primary"
                                         : "text-muted-foreground hover:text-foreground"

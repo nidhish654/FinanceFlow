@@ -22,17 +22,20 @@ import { Button } from "@/components/ui/button";
 import { deleteFinanceProfile } from "../actions/delete-finance-profile";
 
 interface DeleteFinanceProfileDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     profileId: string;
     disabled?: boolean;
 }
 
 export default function DeleteFinanceProfileDialog({
+    open,
+    onOpenChange,
     profileId,
     disabled = false,
 }: DeleteFinanceProfileDialogProps) {
     const router = useRouter();
 
-    const [open, setOpen] = useState(false);
     const [loading, setLoading] =
         useState(false);
 
@@ -51,7 +54,7 @@ export default function DeleteFinanceProfileDialog({
 
         toast.success(result.message);
 
-        setOpen(false);
+        onOpenChange(false);
 
         router.refresh();
     }
@@ -59,16 +62,8 @@ export default function DeleteFinanceProfileDialog({
     return (
         <AlertDialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={onOpenChange}
         >
-            <AlertDialogTrigger asChild>
-                <Button
-                    variant="destructive"
-                    disabled={disabled}
-                >
-                    Delete
-                </Button>
-            </AlertDialogTrigger>
 
             <AlertDialogContent>
                 <AlertDialogHeader>

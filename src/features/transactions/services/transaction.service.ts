@@ -11,6 +11,7 @@ export async function getTransactions(): Promise<TransactionDto[]> {
                         id: true,
                         name: true,
                         type: true,
+                        currency: true,
                     },
                 },
                 transferAccount: {

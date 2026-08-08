@@ -91,7 +91,7 @@ export default function TopSubcategories({
                 </CardHeader>
 
                 <CardContent>
-                    <div className="flex h-60 flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 text-center">
+                    <div className="flex h-77 flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 text-center">
                         <Tag className="mb-4 h-10 w-10 text-muted-foreground" />
 
                         <h3 className="text-lg font-semibold">
@@ -128,7 +128,7 @@ export default function TopSubcategories({
             </CardHeader>
 
             <CardContent>
-                <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                <div className="space-y-3 overflow-y-auto pr-1">
                     {topFive.map((subcategory, index) => {
                         const percentage =
                             highestAmount === 0

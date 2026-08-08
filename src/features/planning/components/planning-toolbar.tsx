@@ -9,6 +9,7 @@ import { SelectOption } from "@/components/forms/SelectField";
 import { PlanningViewState } from "./planning-content";
 
 import { Card } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 
 type PlanningModule =
     | "budgets"
@@ -86,20 +87,21 @@ export default function PlanningToolbar({
                             <Card
                                 className="
                                     flex
-                                    h-9
+                                    h-5
                                     w-full
                                     min-w-[180px]
                                     cursor-pointer
                                     items-center
                                     justify-center
+                                    gap-2
 
                                     rounded-xl
                                     border
                                     border-transparent
 
-                                    bg-white
+                                    bg-primary
                                     px-8
-                                    text-black
+                                    text-primary-foreground
 
                                     shadow-sm
                                     transition-all
@@ -108,11 +110,11 @@ export default function PlanningToolbar({
                                     hover:scale-[1.02]
                                     hover:shadow-md
 
-                                    sm:h-13
+                                    sm:h-7
                                     lg:min-w-44
                                 "
                             >
-                                <span className="text-lg font-semibold">
+                                <span className="text-base font-semibold">
                                     Create Budget
                                 </span>
                             </Card>
@@ -127,7 +129,7 @@ export default function PlanningToolbar({
                             <Card
                                 className="
                                     flex
-                                    h-9
+                                    h-5
                                     w-full
                                     min-w-[180px]
                                     cursor-pointer
@@ -138,9 +140,9 @@ export default function PlanningToolbar({
                                     border
                                     border-transparent
 
-                                    bg-white
+                                    bg-primary
                                     px-8
-                                    text-black
+                                    text-primary-foreground
 
                                     shadow-sm
                                     transition-all
@@ -149,11 +151,11 @@ export default function PlanningToolbar({
                                     hover:scale-[1.02]
                                     hover:shadow-md
 
-                                    sm:h-13
+                                    sm:h-7
                                     lg:min-w-44
                                 "
                             >
-                                <span className="text-lg font-semibold">
+                                <span className="text-base font-semibold">
                                     Create Goal
                                 </span>
                             </Card>

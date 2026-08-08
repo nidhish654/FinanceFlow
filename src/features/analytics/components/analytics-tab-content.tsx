@@ -28,6 +28,7 @@ export default function AnalyticsTabContent({
         case "overview":
             return (
                 <OverviewTab
+                    key={analytics.financeProfileId}
                     analytics={analytics}
                 />
             );
@@ -35,6 +36,7 @@ export default function AnalyticsTabContent({
         case "expenses":
             return (
                 <ExpenseTab
+                    key={analytics.financeProfileId}
                     analysis={analytics.expenseAnalysis}
                     monthlyCashFlow={analytics.monthlyCashFlow}
                     currency={analytics.currency}
@@ -44,6 +46,7 @@ export default function AnalyticsTabContent({
         case "income":
             return (
                 <IncomeTab
+                    key={analytics.financeProfileId}
                     analysis={
                         analytics.incomeAnalysis
                     }
@@ -56,9 +59,21 @@ export default function AnalyticsTabContent({
                 />
             );
 
+        case "categories":
+            return (
+                <CategoryTab
+                    key={analytics.financeProfileId}
+                    analysis={analytics.categoryAnalysis}
+                    transactions={analytics.allTransactions}
+                    previousTransactions={analytics.allPreviousTransactions}
+                    currency={analytics.currency}
+                />
+            );
+
         case "cash-flow":
             return (
                 <CashFlowTab
+                    key={analytics.financeProfileId}
                     analysis={
                         analytics.cashFlowAnalysis
                     }
@@ -71,6 +86,7 @@ export default function AnalyticsTabContent({
         case "accounts":
             return (
                 <AccountsTab
+                    key={analytics.financeProfileId}
                     data={analytics.accountAnalysis}
                     currency={analytics.currency}
                 />
@@ -79,6 +95,7 @@ export default function AnalyticsTabContent({
         case "budgets":
             return (
                 <BudgetTab
+                    key={analytics.financeProfileId}
                     analysis={analytics.budgetAnalysis}
                     currency={analytics.currency}
                 />
@@ -87,17 +104,12 @@ export default function AnalyticsTabContent({
         case "goals":
             return (
                 <GoalTab
+                    key={analytics.financeProfileId}
                     analysis={analytics.goalAnalysis}
                     currency={analytics.currency}
                 />
             );
-        case "categories":
-            return (
-                <CategoryTab
-                    transactions={analytics.transactions}
-                    currency={analytics.currency}
-                />
-            );
+
 
         default:
             return null;

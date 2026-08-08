@@ -22,17 +22,19 @@ import { Button } from "@/components/ui/button";
 import { archiveFinanceProfile } from "../actions/archive-finance-profile";
 
 interface ArchiveFinanceProfileDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     profileId: string;
     disabled?: boolean;
 }
 
 export default function ArchiveFinanceProfileDialog({
+    open,
+    onOpenChange,
     profileId,
     disabled = false,
 }: ArchiveFinanceProfileDialogProps) {
     const router = useRouter();
-
-    const [open, setOpen] = useState(false);
 
     const [loading, setLoading] =
         useState(false);
@@ -54,7 +56,7 @@ export default function ArchiveFinanceProfileDialog({
 
         toast.success(result.message);
 
-        setOpen(false);
+        onOpenChange(false);
 
         router.refresh();
     }
@@ -62,16 +64,8 @@ export default function ArchiveFinanceProfileDialog({
     return (
         <AlertDialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={onOpenChange}
         >
-            <AlertDialogTrigger asChild>
-                <Button
-                    variant="destructive"
-                    disabled={disabled}
-                >
-                    Archive
-                </Button>
-            </AlertDialogTrigger>
 
             <AlertDialogContent>
                 <AlertDialogHeader>

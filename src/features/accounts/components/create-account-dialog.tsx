@@ -17,6 +17,7 @@ import AccountForm from "./account-form";
 
 import { createAccount } from "../actions/create-account";
 import { AccountFormInput } from "../schemas/account.schema";
+import { Plus } from "lucide-react";
 
 export default function CreateAccountDialog() {
     const [open, setOpen] = useState(false);
@@ -42,10 +43,13 @@ export default function CreateAccountDialog() {
             onOpenChange={setOpen}
         >
             <DialogTrigger asChild>
-                <Button>Add Account</Button>
+                <Button className="w-full sm:w-auto">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Account
+                </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-3xl">
                 <DialogHeader>
                     <DialogTitle>Create Account</DialogTitle>
                 </DialogHeader>

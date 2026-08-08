@@ -20,10 +20,10 @@ import { getCategoryIcon } from "@/lib/category-icons";
 function priorityVariant(priority: Priority | null) {
     switch (priority) {
         case Priority.NEED:
-            return "destructive";
+            return "secondary";
 
         case Priority.WANT:
-            return "secondary";
+            return "destructive";
 
         case Priority.SAVINGS:
             return "success";
@@ -197,11 +197,10 @@ export function columns(
             ),
 
             cell: ({ row }) => {
-                const { type, amount } =
-                    row.original;
+                const { type, amount, account } = row.original;
+                const currency = account.currency ?? "INR";
 
-                let color =
-                    "text-foreground";
+                let color = "text-foreground";
 
                 let prefix = "";
 
@@ -230,7 +229,7 @@ export function columns(
                         className={`font-semibold ${color}`}
                     >
                         {prefix}{" "}
-                        {formatCurrency(amount)}
+                        {formatCurrency(amount, currency)}
                     </span>
                 );
             },

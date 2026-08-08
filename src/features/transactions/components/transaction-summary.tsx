@@ -16,11 +16,13 @@ import { formatCurrency } from "@/lib/formatters";
 interface TransactionSummaryProps {
     transactions: TransactionDto[];
     currentBalance: number;
+    baseCurrency: string;
 }
 
 export default function TransactionSummary({
     transactions,
     currentBalance,
+    baseCurrency,
 }: TransactionSummaryProps) {
     const income = transactions
         .filter((t) => t.type === TransactionType.INCOME)
@@ -34,14 +36,14 @@ export default function TransactionSummary({
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <SummaryCard
                 title="Current Balance"
-                value={formatCurrency(currentBalance)}
+                value={formatCurrency(currentBalance, baseCurrency)}
                 icon={Wallet}
                 iconClassName="text-blue-600"
             />
 
             <SummaryCard
                 title="Income"
-                value={formatCurrency(income)}
+                value={formatCurrency(income, baseCurrency)}
                 valueClassName="text-green-600"
                 icon={TrendingUp}
                 iconClassName="text-green-600"
@@ -49,7 +51,7 @@ export default function TransactionSummary({
 
             <SummaryCard
                 title="Expenses"
-                value={formatCurrency(expenses)}
+                value={formatCurrency(expenses, baseCurrency)}
                 valueClassName="text-red-600"
                 icon={TrendingDown}
                 iconClassName="text-red-600"

@@ -59,7 +59,20 @@ export default function GoalTab({ analysis, currency }: GoalTabProps) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-12 duration-800">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <div>
+                    <h2 className="text-xl font-semibold tracking-tight">
+                        Goal Analytics
+                    </h2>
+
+                    <p className="text-sm text-muted-foreground">
+                        Analyze your goals.
+                    </p>
+                </div>
+            </div>
 
             {/* 1. Summary Cards (Always shows all goals) */}
             <GoalSummaryCards summary={analysis.summary} currency={currency} />

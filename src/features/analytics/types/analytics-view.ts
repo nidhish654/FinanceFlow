@@ -16,11 +16,11 @@ export const ANALYTICS_TABS = [
     "overview",
     "expenses",
     "income",
+    "categories",
     "cash-flow",
     "accounts",
     "budgets",
     "goals",
-    "categories",
 ] as const;
 
 export interface AnalyticsDateRange {
@@ -134,6 +134,7 @@ export interface AnalyticsView {
     period: AnalyticsPeriodInfo;
 
     currency: string;
+    financeProfileId: string;
 
     summary: AnalyticsSummary;
 
@@ -141,7 +142,9 @@ export interface AnalyticsView {
 
     topCategories: AnalyticsCategoryPoint[];
 
-    transactions: TransactionDto[];
+    allTransactions: TransactionDto[];
+
+    allPreviousTransactions: TransactionDto[];
 
     accountAnalysis: AnalyticsAccountAnalysis;
 
@@ -154,6 +157,8 @@ export interface AnalyticsView {
     cashFlowAnalysis: AnalyticsCashFlowAnalysis;
 
     goalAnalysis: AnalyticsGoalAnalysis;
+
+    categoryAnalysis: CategoryPeriodAnalysis;
 
     // financialHealth:
     //     AnalyticsFinancialHealth;

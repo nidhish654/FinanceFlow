@@ -61,7 +61,20 @@ export default function BudgetTab({ analysis, currency }: BudgetTabProps) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-12 duration-800">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <div>
+                    <h2 className="text-xl font-semibold tracking-tight">
+                        Budget Analytics
+                    </h2>
+
+                    <p className="text-sm text-muted-foreground">
+                        Analyze your budgets.
+                    </p>
+                </div>
+            </div>
 
             {/* 1. Summary Cards — always use all budgets in range */}
             <BudgetSummaryCards summary={analysis.summary} currency={currency} />

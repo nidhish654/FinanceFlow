@@ -22,17 +22,19 @@ import { Button } from "@/components/ui/button";
 import { restoreFinanceProfile } from "../actions/restore-finance-profile";
 
 interface RestoreFinanceProfileDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     profileId: string;
     disabled?: boolean;
 }
 
 export default function RestoreFinanceProfileDialog({
+    open,
+    onOpenChange,
     profileId,
     disabled = false,
 }: RestoreFinanceProfileDialogProps) {
     const router = useRouter();
-
-    const [open, setOpen] = useState(false);
 
     const [loading, setLoading] =
         useState(false);
@@ -54,7 +56,7 @@ export default function RestoreFinanceProfileDialog({
 
         toast.success(result.message);
 
-        setOpen(false);
+        onOpenChange(false);
 
         router.refresh();
     }
@@ -62,32 +64,19 @@ export default function RestoreFinanceProfileDialog({
     return (
         <AlertDialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={onOpenChange}
         >
-            <AlertDialogTrigger asChild>
-                <Button
-                    variant="destructive"
-                    disabled={disabled}
-                >
-                    Restore
-                </Button>
-            </AlertDialogTrigger>
 
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Archive Finance Profile?
+                        Restore Finance Profile?
                     </AlertDialogTitle>
 
                     <AlertDialogDescription>
-                        This profile will be hidden
-                        from your active finance
+                        This profile will be shown
+                        in your active finance
                         profiles.
-
-                        <br />
-                        <br />
-
-                        You can restore it later.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 

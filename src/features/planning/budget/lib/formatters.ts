@@ -1,14 +1,3 @@
-export function formatCurrency(
-    amount: number,
-    currency: string,
-    locale = "en-IN"
-) {
-    return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency,
-    }).format(amount);
-}
-
 export function formatShortDate(
     date: Date,
     locale = "en-IN"

@@ -28,6 +28,8 @@ const TAB_LABELS: Record<
 
     income: "Income",
 
+    categories: "Categories",
+
     "cash-flow": "Cash Flow",
 
     accounts: "Accounts",
@@ -35,8 +37,6 @@ const TAB_LABELS: Record<
     budgets: "Budgets",
 
     goals: "Goals",
-
-    categories: "Categories",
 };
 
 export default function AnalyticsTabs({

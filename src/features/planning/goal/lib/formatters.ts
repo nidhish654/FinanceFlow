@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/lib/formatters";
+
 /**
  * Formats a currency amount.
  */
@@ -6,14 +8,7 @@ export function formatGoalAmount(
     currency: string,
     locale = "en-IN"
 ): string {
-    return new Intl.NumberFormat(
-        locale,
-        {
-            style: "currency",
-            currency,
-            maximumFractionDigits: 2,
-        }
-    ).format(amount);
+    return formatCurrency(amount, currency);
 }
 
 /**

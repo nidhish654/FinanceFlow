@@ -2,7 +2,7 @@
 
 import { BudgetPeriod } from "@prisma/client";
 
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -16,10 +16,9 @@ import { cn } from "@/lib/utils";
 
 import { BudgetView } from "../types/budget-view";
 
-import {
-    formatCurrency,
-    formatShortDate,
-} from "../lib/formatters";
+
+import { formatCurrency } from "@/lib/formatters";
+import { formatShortDate } from "../lib/formatters";
 
 interface BudgetCardProps {
     budget: BudgetView;
@@ -45,37 +44,34 @@ export default function BudgetCard({
     actions,
 }: BudgetCardProps) {
     const {
-    categoryName,
-    amount,
-    currency,
-    locale = "en-IN",
-    period,
-    startDate,
-    endDate,
-    durationDays,
-    spentAmount,
-    remainingAmount,
-    progress,
-    isExceeded,
-    overBudgetAmount,
-} = budget;
+        categoryName,
+        amount,
+        currency,
+        locale = "en-IN",
+        period,
+        startDate,
+        endDate,
+        durationDays,
+        spentAmount,
+        remainingAmount,
+        progress,
+        isExceeded,
+        overBudgetAmount,
+    } = budget;
 
     const formattedAmount = formatCurrency(
         amount ?? 0,
-        currency,
-        locale
+        currency
     );
 
     const formattedSpent = formatCurrency(
         spentAmount ?? 0,
-        currency,
-        locale
+        currency
     );
 
     const formattedRemaining = formatCurrency(
         remainingAmount ?? 0,
-        currency,
-        locale
+        currency
     );
 
     const dateRange = `${formatShortDate(
@@ -96,11 +92,21 @@ export default function BudgetCard({
         100
     );
 
-    const progressColor = isExceeded
-    ? "bg-destructive"
-    : progressValue >= 90
-        ? "bg-yellow-500"
-        : "bg-blue-500";
+    const isCompletedSuccessfully =
+        !preview &&
+        !budget.archived &&
+        !isExceeded &&
+        new Date() > endDate &&
+        remainingAmount > 0;
+
+    const progressColor =
+        isCompletedSuccessfully
+            ? "bg-emerald-500"
+            : isExceeded
+                ? "bg-destructive"
+                : progressValue >= 90
+                    ? "bg-yellow-500"
+                    : "bg-blue-500";
 
     return (
         <Card
@@ -115,11 +121,16 @@ export default function BudgetCard({
                 hover:-translate-y-0.5
                 hover:shadow-lg
                 `,
-                isExceeded
-                    ? "border-red-500/40 hover:border-red-500/60"
-                    : progressValue >= 90
-                        ? "border-yellow-500/40 hover:border-yellow-500/60"
-                        : "border-blue-500/30 hover:border-blue-500/60",
+                isCompletedSuccessfully
+                    ? "border-emerald-500/40 hover:border-emerald-500/60"
+
+                    : isExceeded
+                        ? "border-red-500/40 hover:border-red-500/60"
+
+                        : progressValue >= 90
+                            ? "border-yellow-500/40 hover:border-yellow-500/60"
+
+                            : "border-blue-500/30 hover:border-blue-500/60",
                 className
             )}
         >
@@ -172,19 +183,21 @@ export default function BudgetCard({
                             }
                             className={cn(
                                 progressValue >= 90 &&
-                                    progressValue < 100 &&
-                                    "bg-yellow-500/15 text-yellow-600 border-yellow-500/30"
+                                progressValue < 100 &&
+                                "bg-yellow-500/15 text-yellow-600 border-yellow-500/30"
                             )}
                         >
                             {preview
                                 ? "Preview"
                                 : budget.archived
                                     ? "Archived"
-                                    : isExceeded
-                                        ? "Over Budget"
-                                        : progressValue >= 90
-                                            ? "Near Limit"
-                                            : "Active"}
+                                    : isCompletedSuccessfully
+                                        ? "Completed"
+                                        : isExceeded
+                                            ? "Over Budget"
+                                            : progressValue >= 90
+                                                ? "Near Limit"
+                                                : "Active"}
                         </Badge>
 
                         {!preview && actions}
@@ -224,11 +237,16 @@ export default function BudgetCard({
                         <span
                             className={cn(
                                 "text-blue-500 text-sm font-semibold",
+
+                                isCompletedSuccessfully &&
+                                "text-emerald-500",
+
                                 progressValue >= 90 &&
-                                    progressValue < 100 &&
-                                    "text-yellow-500",
+                                progressValue < 100 &&
+                                "text-yellow-500",
+
                                 isExceeded &&
-                                    "text-red-500"
+                                "text-red-500"
                             )}
                         >
                             {Math.round(progressValue)}%
@@ -250,10 +268,12 @@ export default function BudgetCard({
 
                     </div>
 
-                    {/* Reserved space for warning */}
+                    {/* ---------- Status Message ---------- */}
+
                     <div className="min-h-10 flex items-center">
 
-                        {isExceeded && (
+                        {isExceeded ? (
+
                             <div
                                 className="
                                     flex
@@ -275,14 +295,42 @@ export default function BudgetCard({
                                     <span className="font-semibold">
                                         {formatCurrency(
                                             overBudgetAmount,
-                                            currency,
-                                            locale
+                                            currency
                                         )}
                                     </span>
                                 </p>
 
                             </div>
-                        )}
+
+                        ) : isCompletedSuccessfully ? (
+
+                            <div
+                                className="
+                                    flex
+                                    w-full
+                                    items-center
+                                    gap-2
+                                    rounded-lg
+                                    border
+                                    border-emerald-500/30
+                                    bg-emerald-500/10
+                                    px-3
+                                    py-2
+                                "
+                            >
+                                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+
+                                <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                                    Saved{" "}
+                                    <span className="font-semibold">
+                                        {formattedRemaining}
+                                    </span>{" "}
+                                    from this budget.
+                                </p>
+
+                            </div>
+
+                        ) : null}
 
                     </div>
 
@@ -371,7 +419,12 @@ export default function BudgetCard({
                                 text-muted-foreground
                             "
                         >
-                            Remaining
+                            {isCompletedSuccessfully
+                                ? "Saved"
+                                : isExceeded
+                                    ? "Over budget"
+                                    : "Remaining"}
+
                         </p>
 
                         <p
@@ -386,10 +439,19 @@ export default function BudgetCard({
                                 tracking-tight
                                 `,
                                 isExceeded &&
-                                    "text-destructive"
+                                "text-destructive",
+                                isCompletedSuccessfully &&
+                                "text-emerald-600 dark:text-emerald-400"
                             )}
                         >
-                            {formattedRemaining}
+                            {isCompletedSuccessfully
+                                ? formattedRemaining
+                                : isExceeded
+                                    ? formatCurrency(
+                                        overBudgetAmount,
+                                        currency
+                                    )
+                                    : formattedRemaining}
                         </p>
 
                         <p
@@ -399,9 +461,11 @@ export default function BudgetCard({
                                 text-muted-foreground
                             "
                         >
-                            {isExceeded
-                            ? "Budget exceeded"
-                            : "Budget available"}
+                            {isCompletedSuccessfully
+                                ? "Stayed under budget"
+                                : isExceeded
+                                    ? "Budget exceeded"
+                                    : "Budget available"}
                         </p>
 
                     </div>

@@ -36,10 +36,10 @@ export default function PlanningHeader({
                         value: "goals",
                         label: "Goals",
                     },
-                    {
-                        value: "debts",
-                        label: "Debts",
-                    },
+                    // {
+                    //     value: "debts",
+                    //     label: "Debts",
+                    // },
                 ]}
                 value={module}
                 onValueChange={onModuleChange}

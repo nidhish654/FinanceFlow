@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/lib/formatters";
+
 interface CurrencyAmountProps {
     amount: number;
     currency: string;
@@ -8,22 +10,15 @@ interface CurrencyAmountProps {
 export default function CurrencyAmount({
     amount,
     currency,
-    minimumFractionDigits = 2,
-    maximumFractionDigits = 2,
+    minimumFractionDigits,
+    maximumFractionDigits,
 }: CurrencyAmountProps) {
-    const locale =
-        currency === "JPY"
-            ? "ja-JP"
-            : currency === "INR"
-                ? "en-IN"
-                : "en-US";
-
-    const formattedAmount = new Intl.NumberFormat(locale, {
-        style: "currency",
+    const formattedAmount = formatCurrency(
+        amount,
         currency,
         minimumFractionDigits,
-        maximumFractionDigits,
-    }).format(amount);
+        maximumFractionDigits
+    );
 
     return (
         <span className="tabular-nums">

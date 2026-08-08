@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { AnalyticsBudget } from "@/features/analytics/types/analytics-view";
 
 import { cn } from "@/lib/utils";
+import { formatCurrency as globalFormatCurrency } from "@/lib/formatters";
 
 interface BudgetUtilizationProps {
     budgets: AnalyticsBudget[];
@@ -25,12 +26,7 @@ export default function BudgetUtilization({
 }: BudgetUtilizationProps) {
     if (budgets.length === 0) return null;
 
-    const formatCurrency = (value: number) =>
-        new Intl.NumberFormat("en-IN", {
-            style: "currency",
-            currency,
-            maximumFractionDigits: 0,
-        }).format(value);
+    const formatCurrency = (value: number) => globalFormatCurrency(value, currency);
 
     const healthColors = {
         Excellent: "bg-emerald-500",

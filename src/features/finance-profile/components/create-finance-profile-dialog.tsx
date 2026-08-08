@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import FinanceProfileForm from "./finance-profile-form";
 
 import { createFinanceProfile } from "../actions/create-finance-profile";
+import { Plus } from "lucide-react";
 
 export default function CreateFinanceProfileDialog() {
     const [open, setOpen] = useState(false);
@@ -45,8 +46,9 @@ export default function CreateFinanceProfileDialog() {
             onOpenChange={setOpen}
         >
             <DialogTrigger asChild>
-                <Button>
-                    Create Finance Profile
+                <Button className="w-full sm:w-auto">
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Finance Profile
                 </Button>
             </DialogTrigger>
 

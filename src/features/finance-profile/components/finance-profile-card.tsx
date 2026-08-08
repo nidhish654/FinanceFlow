@@ -10,10 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { setActiveFinanceProfileAction } from "../actions/set-active-finance-profile";
-import ArchiveFinanceProfileDialog from "./archive-finance-profile-dialog";
-import DeleteFinanceProfileDialog from "./delete-finance-profile-dialog";
-import EditFinanceProfileDialog from "./edit-finance-profile-dialog";
-import RestoreFinanceProfileDialog from "./restore-finance-profile-dialog";
+
+import FinanceProfileActionsDropdown from "./finance-profile-actions-dropdown";
+import { Separator } from "@/components/ui/separator";
 
 interface FinanceProfileCardProps {
     profile: {
@@ -60,7 +59,7 @@ export default function FinanceProfileCard({
         <div className="rounded-xl border bg-card p-5 shadow-sm">
             <div className="flex items-start justify-between">
                 <div>
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-xl sm:text-2xl font-semibold">
                         {profile.name}
                     </h2>
 
@@ -69,21 +68,29 @@ export default function FinanceProfileCard({
                             "No description"}
                     </p>
                 </div>
-
+                <div className="flex items-center sm:gap-2">
                     <Badge
-                        className="h-6 px-2 text-xs"
-                        variant={
-                            profile.status === FinanceProfileStatus.ACTIVE
-                                ? "default"
-                                : "secondary"
+                        variant="outline"
+                        className={
+                            profile.status === FinanceProfileStatus.ARCHIVED
+                                ? "h-6 px-2 text-xs border-muted text-muted-foreground"
+                                : isActive
+                                    ? "h-6 px-2 text-xs border-primary bg-primary text-primary-foreground"
+                                    : "h-6 px-2 text-xs border-green-500/40 bg-green-500/10 text-green-600 dark:text-green-400"
                         }
                     >
                         {profile.status === FinanceProfileStatus.ARCHIVED
                             ? "Archived"
                             : isActive
-                            ? "Current"
-                            : "Active"}
+                                ? "Current"
+                                : "Active"}
                     </Badge>
+
+                    <FinanceProfileActionsDropdown
+                        profile={profile}
+                        isActive={isActive}
+                    />
+                </div>
             </div>
 
             <div className="mt-3 space-y-2 text-sm">
@@ -95,53 +102,28 @@ export default function FinanceProfileCard({
                     </span>
                 </div>
             </div>
+            {profile.status !== FinanceProfileStatus.ARCHIVED && (
+                <Separator className="mt-3" />
+            )}
 
-            <div className="mt-6 space-y-2">
+            <div className="mt-3 space-y-2">
 
-                {profile.status ===
-                FinanceProfileStatus.ACTIVE ? (
-                    <>
-                        <Button
-                            className="h-9 w-full rounded-lg"
-                            disabled={
-                                isActive || isPending
-                            }
-                            variant={
-                                isActive
-                                    ? "secondary"
-                                    : "default"
-                            }
-                            onClick={handleSwitch}
-                        >
-                            {isPending
-                                ? "Switching..."
-                                : isActive
+                {profile.status === FinanceProfileStatus.ACTIVE && (
+                    <Button
+                        className="h-9 w-full rounded-lg"
+                        disabled={isActive || isPending}
+                        variant={isActive ? "secondary" : "default"}
+                        onClick={handleSwitch}
+                    >
+                        {isPending
+                            ? "Switching..."
+                            : isActive
                                 ? "Current Profile"
-                                : "Switch"}
-                        </Button>
-
-                        <div className="flex  items-center justify-between mt-2">
-                            <EditFinanceProfileDialog profile={profile} />
-
-                            <ArchiveFinanceProfileDialog
-                                profileId={profile.id}
-                                disabled={isActive}
-                            />
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <RestoreFinanceProfileDialog
-                            profileId={profile.id}
-                        />
-
-                        <DeleteFinanceProfileDialog
-                            profileId={profile.id}
-                        />
-                    </>
+                                : "Switch Profile"}
+                    </Button>
                 )}
 
             </div>
-            </div>
+        </div>
     );
 }

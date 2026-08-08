@@ -9,14 +9,7 @@ import {
     CategoryGrowth,
 } from "../types/analytics-view";
 
-function formatCurrency(amount: number, currency: string) {
-    return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currency,
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(amount);
-}
+import { formatCurrency } from "@/lib/formatters";
 
 function generateInsights(
     categories: CategoryPoint[],
@@ -78,8 +71,13 @@ export function buildCategoryAnalysis(
     previousTransactions: TransactionDto[],
     currency: string
 ): CategoryPeriodAnalysis {
-    const periodTransactions = transactions.filter(t => t.type === TransactionType.EXPENSE);
-    const prevExpenseTransactions = previousTransactions.filter(t => t.type === TransactionType.EXPENSE);
+    const periodTransactions = transactions.filter(
+        (t) => t.type === TransactionType.EXPENSE
+    );
+
+    const prevTransactions = previousTransactions.filter(
+        (t) => t.type === TransactionType.EXPENSE
+    );
 
     let totalAmount = 0;
     const categoryMap = new Map<string, CategoryPoint>();
@@ -114,7 +112,7 @@ export function buildCategoryAnalysis(
 
         current.amount += t.amount;
         current.transactionCount += 1;
-        
+
         if (current.recentTransactions.length < 10) {
             current.recentTransactions.push(t);
         }
@@ -172,7 +170,7 @@ export function buildCategoryAnalysis(
     };
 
     const prevCategoryMap = new Map<string, number>();
-    prevExpenseTransactions.forEach(t => {
+    prevTransactions.forEach(t => {
         const isSub = !!t.category?.parent;
         const parentKey = isSub ? t.category!.parent!.id : (t.category?.id ?? "uncategorized");
         prevCategoryMap.set(parentKey, (prevCategoryMap.get(parentKey) ?? 0) + t.amount);

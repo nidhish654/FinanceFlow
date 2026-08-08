@@ -3,6 +3,7 @@
 import { Target, TrendingUp, PiggyBank, HeartPulse } from "lucide-react";
 import { AnalyticsGoalSummary } from "@/features/analytics/types/analytics-view";
 import { cn } from "@/lib/utils";
+import { formatCurrency as globalFormatCurrency } from "@/lib/formatters";
 
 interface GoalSummaryCardsProps {
     summary: AnalyticsGoalSummary;
@@ -13,12 +14,7 @@ export default function GoalSummaryCards({
     summary,
     currency,
 }: GoalSummaryCardsProps) {
-    const formatCurrency = (value: number) =>
-        new Intl.NumberFormat("en-IN", {
-            style: "currency",
-            currency,
-            maximumFractionDigits: 0,
-        }).format(value);
+    const formatCurrency = (value: number) => globalFormatCurrency(value, currency);
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

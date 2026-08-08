@@ -36,7 +36,7 @@ export function FinancialCalendarCard({
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="monthStart">Financial Month Starts On</Label>
                     <p className="text-sm text-muted-foreground">
-                        The day of the month your reporting periods begin. Safe values are 1-28 to prevent edge cases with February.
+                        The day of the month your reporting periods begin. Useful for people whose salary cycle starts mid-month.
                     </p>
                     <Select
                         value={monthStart.toString()}

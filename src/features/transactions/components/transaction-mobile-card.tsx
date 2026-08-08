@@ -20,10 +20,10 @@ interface TransactionMobileCardProps {
 function priorityVariant(priority: Priority | null) {
     switch (priority) {
         case Priority.NEED:
-            return "destructive";
+            return "secondary";
 
         case Priority.WANT:
-            return "secondary";
+            return "destructive";
 
         case Priority.SAVINGS:
             return "success";
@@ -114,7 +114,7 @@ export default function TransactionMobileCard({
                     className={`text-2xl font-bold ${amount.color}`}
                 >
                     {amount.prefix}{" "}
-                    {formatCurrency(transaction.amount)}
+                    {formatCurrency(transaction.amount, transaction.account.currency ?? "INR")}
                 </p>
 
             </div>

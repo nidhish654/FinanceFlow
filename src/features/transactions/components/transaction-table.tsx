@@ -26,6 +26,7 @@ interface TransactionTableProps {
     categoryOptions: SelectOption[];
     rawAccounts: any[];
     rawCategories: any[];
+    baseCurrency: string;
 }
 
 export default function TransactionTable({
@@ -35,6 +36,7 @@ export default function TransactionTable({
     categoryOptions,
     rawAccounts,
     rawCategories,
+    baseCurrency,
 }: TransactionTableProps) {
     const [search, setSearch] = useState("");
 
@@ -143,6 +145,7 @@ export default function TransactionTable({
                 currentBalance={
                     currentBalance
                 }
+                baseCurrency={baseCurrency}
             />
 
             <TransactionToolbar

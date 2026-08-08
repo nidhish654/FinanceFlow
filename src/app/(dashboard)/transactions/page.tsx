@@ -9,35 +9,40 @@ import TransactionEmptyState from "@/features/transactions/components/transactio
 import { getTransactions } from "@/features/transactions/services/get-transactions";
 import { getAccounts } from "@/features/accounts/actions/getAccounts";
 import { getCategories } from "@/features/categories/services/get-categories";
+import { getActiveFinanceProfile } from "@/features/finance-profile/services/active-finance-profile.service";
 
 export default async function TransactionsPage() {
     const [
         transactions,
         accounts,
         categories,
+        activeFinanceProfile,
     ] = await Promise.all([
         getTransactions(),
         getAccounts(),
         getCategories(),
+        getActiveFinanceProfile(),
     ]);
 
+    const baseCurrency = activeFinanceProfile?.baseCurrency ?? "INR";
+
     const openingBalance = accounts.reduce(
-        (sum, account) =>
+        (sum: number, account: any) =>
             sum + Number(account.openingBalance),
         0
     );
 
     const income = transactions
-        .filter((t) => t.type === "INCOME")
+        .filter((t: any) => t.type === "INCOME")
         .reduce(
-            (sum, t) => sum + t.amount,
+            (sum: number, t: any) => sum + t.amount,
             0
         );
 
     const expenses = transactions
-        .filter((t) => t.type === "EXPENSE")
+        .filter((t: any) => t.type === "EXPENSE")
         .reduce(
-            (sum, t) => sum + t.amount,
+            (sum: number, t: any) => sum + t.amount,
             0
         );
 
@@ -47,13 +52,13 @@ export default async function TransactionsPage() {
         expenses;
 
     const accountOptions = accounts.map(
-        (account) => ({
+        (account: any) => ({
             value: account.id,
             label: account.name,
         })
     );
 
-    const categoryOptions = categories.map((category) => ({
+    const categoryOptions = categories.map((category: any) => ({
         value: category.id,
         label: category.name,
         type: category.type,
@@ -92,6 +97,7 @@ export default async function TransactionsPage() {
                     categoryOptions={categoryOptions}
                     rawAccounts={accounts}
                     rawCategories={categories}
+                    baseCurrency={baseCurrency}
                 />
             )}
         </div>

@@ -18,6 +18,7 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
     children,
 }: DashboardLayoutProps) {
+
     const session = await getSession();
 
     if (!session) {
@@ -43,5 +44,5 @@ export default async function DashboardLayout({
         >
             {children}
         </AppShell>
-        );
+    );
 }

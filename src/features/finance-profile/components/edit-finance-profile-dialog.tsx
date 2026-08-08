@@ -24,6 +24,9 @@ import type { FinanceProfileSchema } from "../schemas/finance-profile.schema";
 import { Currency } from "@prisma/client";
 
 interface EditFinanceProfileDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+
     profile: {
         id: string;
         name: string;
@@ -33,11 +36,11 @@ interface EditFinanceProfileDialogProps {
 }
 
 export default function EditFinanceProfileDialog({
+    open,
+    onOpenChange,
     profile,
 }: EditFinanceProfileDialogProps) {
     const router = useRouter();
-
-    const [open, setOpen] = useState(false);
 
     async function handleUpdate(
         values: FinanceProfileSchema
@@ -55,7 +58,7 @@ export default function EditFinanceProfileDialog({
 
         toast.success(result.message);
 
-        setOpen(false);
+        onOpenChange(false);
 
         router.refresh();
     }
@@ -63,13 +66,8 @@ export default function EditFinanceProfileDialog({
     return (
         <Dialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={onOpenChange}
         >
-            <DialogTrigger asChild>
-                <Button variant="outline">
-                    Edit
-                </Button>
-            </DialogTrigger>
 
             <DialogContent className="sm:max-w-xl">
                 <DialogHeader>

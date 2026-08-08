@@ -8,6 +8,7 @@ export type TransactionWithRelations =
                     id: true;
                     name: true;
                     type: true;
+                    currency: true;
                 };
             };
 

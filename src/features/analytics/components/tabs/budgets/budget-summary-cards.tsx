@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
+import { formatCurrency as globalFormatCurrency } from "@/lib/formatters";
 
 interface BudgetSummaryCardsProps {
     summary: AnalyticsBudgetSummary;
@@ -20,13 +21,7 @@ export default function BudgetSummaryCards({
     summary,
     currency,
 }: BudgetSummaryCardsProps) {
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat("en-IN", {
-            style: "currency",
-            currency,
-            maximumFractionDigits: 0,
-        }).format(value);
-    };
+    const formatCurrency = (value: number) => globalFormatCurrency(value, currency);;
 
     const healthColors = {
         Excellent: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",

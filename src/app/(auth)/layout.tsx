@@ -22,8 +22,8 @@ export default async function AuthLayout({
     return (
         <main className="fixed inset-0 overflow-y-auto bg-background">
             {/* Background Glow */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
+            <div className="absolute inset-0 overflow-y-auto">
+                <div className="absolute left-1/2 top-1/2 w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
 
                 <div className="absolute left-0 top-0 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 

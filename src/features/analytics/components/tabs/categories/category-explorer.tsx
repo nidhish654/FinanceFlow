@@ -155,7 +155,7 @@ export default function CategoryExplorer({
 
                                                 <div className="flex flex-wrap items-center gap-2">
 
-                                                    <h3 className="truncate text-xl font-semibold md:text-2xl">
+                                                    <h3 className="truncate text-xl font-semibold md:text-xl">
                                                         {category.name}
                                                     </h3>
 
@@ -186,7 +186,7 @@ export default function CategoryExplorer({
                                         {/* Desktop Amount */}
                                         <div className="hidden shrink-0 md:block">
 
-                                            <div className="text-2xl font-bold tracking-tight">
+                                            <div className="text-xl font-bold tracking-tight">
 
                                                 <CurrencyAmount
                                                     amount={category.amount}

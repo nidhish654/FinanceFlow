@@ -27,7 +27,20 @@ export default function IncomeTab({
     currency,
 }: IncomeTabProps) {
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-800">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <div>
+                    <h2 className="text-xl font-semibold tracking-tight">
+                        Income Analytics
+                    </h2>
+
+                    <p className="text-sm text-muted-foreground">
+                        Analyze your income trends.
+                    </p>
+                </div>
+            </div>
 
             {/* =========================================
              * Income Summary

@@ -3,7 +3,7 @@ import {
   Receipt,
   Landmark,
   FolderTree,
-  Target,
+  ClipboardList,
   ChartColumn,
   Settings,
   BriefcaseBusiness
@@ -37,7 +37,7 @@ export const navigation = [
   {
     title: "Planning",
     href: "/planning",
-    icon: Target,
+    icon: ClipboardList,
     group: "main",
   },
   {

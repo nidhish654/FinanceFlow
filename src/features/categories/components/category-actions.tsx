@@ -68,34 +68,35 @@ export default function CategoryActions({
                         </DropdownMenuItem>
                     </CreateCategoryDialog>
                 )}
-
-                {category.isArchived ? (
-                    <RestoreCategoryDialog
-                        categoryId={category.id}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) =>
-                                e.preventDefault()
-                            }
+                {!category.parentCategoryId &&
+                    (category.isArchived ? (
+                        <RestoreCategoryDialog
+                            categoryId={category.id}
                         >
-                            <RotateCcw className="mr-2 h-4 w-4" />
-                            Restore
-                        </DropdownMenuItem>
-                    </RestoreCategoryDialog>
-                ) : (
-                    <ArchiveCategoryDialog
-                        categoryId={category.id}
-                    >
-                        <DropdownMenuItem
-                            onSelect={(e) =>
-                                e.preventDefault()
-                            }
+                            <DropdownMenuItem
+                                onSelect={(e) =>
+                                    e.preventDefault()
+                                }
+                            >
+                                <RotateCcw className="mr-2 h-4 w-4" />
+                                Restore
+                            </DropdownMenuItem>
+                        </RestoreCategoryDialog>
+                    ) : (
+                        <ArchiveCategoryDialog
+                            categoryId={category.id}
                         >
-                            <Archive className="mr-2 h-4 w-4" />
-                            Archive
-                        </DropdownMenuItem>
-                    </ArchiveCategoryDialog>
-                )}
+                            <DropdownMenuItem
+                                onSelect={(e) =>
+                                    e.preventDefault()
+                                }
+                            >
+                                <Archive className="mr-2 h-4 w-4" />
+                                Archive
+                            </DropdownMenuItem>
+                        </ArchiveCategoryDialog>
+                    ))
+                }
 
                 <DeleteCategoryDialog
                     categoryId={category.id}
