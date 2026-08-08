@@ -14,7 +14,7 @@ export function Footer() {
       <Section padding="lg">
         <Container size="lg">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
-            
+
             {/* Brand Column */}
             <div className="col-span-2 lg:col-span-2 flex flex-col gap-6">
               <Link href="/" className="flex items-center gap-2 group w-fit">
@@ -24,14 +24,14 @@ export function Footer() {
                 <span className="text-xl font-bold tracking-tight">FinanceFlow</span>
               </Link>
               <p className="text-muted-foreground text-sm max-w-sm leading-relaxed">
-                Take complete control of your financial life. Beautiful, intuitive, and 
+                Take complete control of your financial life. Beautiful, intuitive, and
                 powerful personal finance management for the modern web.
               </p>
             </div>
 
             {/* Links Columns */}
             <div className="flex flex-col gap-4">
-              <h4 className="font-semibold text-foreground">Resources</h4>
+              <h4 className="font-semibold text-foreground">Resources and Connect</h4>
               <ul className="flex flex-col gap-3">
                 {LANDING_CONSTANTS.footer.resources.map((link) => (
                   <li key={link.name}>
@@ -56,7 +56,7 @@ export function Footer() {
               </ul>
             </div>
 
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
               <h4 className="font-semibold text-foreground">Connect</h4>
               <ul className="flex flex-col gap-3">
                 {LANDING_CONSTANTS.footer.social.map((link) => (
@@ -72,7 +72,7 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
 
           </div>
 

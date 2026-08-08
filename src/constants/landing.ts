@@ -33,8 +33,9 @@ export const LANDING_CONSTANTS = {
   ],
   footer: {
     resources: [
-      { name: "Documentation", href: "#" },
-      { name: "Help Center", href: "#" },
+      { name: "Documentation", href: "https://docs.google.com/document/d/1lszopAGmP5ZSsPd-kSCSX8ymzYdLY-icVeLNawrpdQE/edit?usp=sharing" },
+      { name: "GitHub", href: "https://github.com/nidhish654/FinanceFlow" },
+      { name: "LinkedIn", href: "https://www.linkedin.com/in/nidhish-shettigar" },
       // { name: "Guides", href: "#" },
     ],
     technology: [
@@ -44,8 +45,6 @@ export const LANDING_CONSTANTS = {
     ],
     social: [
       // { name: "Twitter", href: "#" },
-      { name: "GitHub", href: "https://github.com/nidhish654/FinanceFlow" },
-      { name: "LinkedIn", href: "https://www.linkedin.com/in/nidhish-shettigar" },
       // { name: "Discord", href: "#" },
     ],
     legal: [

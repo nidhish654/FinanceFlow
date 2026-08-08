@@ -54,7 +54,7 @@ export const USEFUL_LINKS = [
     {
         title: "Documentation",
         icon: FileText,
-        href: "#",
+        href: "https://docs.google.com/document/d/1lszopAGmP5ZSsPd-kSCSX8ymzYdLY-icVeLNawrpdQE/edit?usp=sharing",
     },
     {
         title: "GitHub Repository",
