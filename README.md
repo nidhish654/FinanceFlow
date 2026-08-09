@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="YOUR_VERCEL_URL">Live Demo</a>
+  <a href="https://finance-flow-finance-tracker.vercel.app/">Live Demo</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="https://docs.google.com/document/d/1lszopAGmP5ZSsPd-kSCSX8ymzYdLY-icVeLNawrpdQE/edit?usp=sharing">User Documentation</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
