@@ -30,6 +30,6 @@ export const auth = betterAuth({
 
     trustedOrigins: [
         process.env.BETTER_AUTH_URL!,
-        "http://192.168.1.36:3000",
+        process.env.NEXT_PUBLIC_BETTER_AUTH_URL!,
     ],
 });
