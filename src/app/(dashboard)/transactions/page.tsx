@@ -87,19 +87,15 @@ export default async function TransactionsPage() {
                 </Button>
             </div>
 
-            {transactions.length === 0 ? (
-                <TransactionEmptyState variant="empty" />
-            ) : (
-                <TransactionTable
-                    transactions={transactions}
-                    currentBalance={currentBalance}
-                    accountOptions={accountOptions}
-                    categoryOptions={categoryOptions}
-                    rawAccounts={accounts}
-                    rawCategories={categories}
-                    baseCurrency={baseCurrency}
-                />
-            )}
+            <TransactionTable
+                transactions={transactions}
+                currentBalance={currentBalance}
+                accountOptions={accountOptions}
+                categoryOptions={categoryOptions}
+                rawAccounts={accounts}
+                rawCategories={categories}
+                baseCurrency={baseCurrency}
+            />
         </div>
     );
 }

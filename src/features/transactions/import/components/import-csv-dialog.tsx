@@ -91,7 +91,7 @@ export function ImportCSVDialog({ categories, accounts }: ImportCSVDialogProps) 
     const handlePreviewContinue = () => {
         const missingAccounts = extractUnknownAccounts(rows, accounts);
         setUnknownAccounts(missingAccounts);
-        
+
         if (missingAccounts.length > 0) {
             setStep("account-resolution");
         } else {
@@ -101,10 +101,10 @@ export function ImportCSVDialog({ categories, accounts }: ImportCSVDialogProps) 
 
     const handleAccountResolution = (resolutions: ResolutionMap) => {
         setAccountResolutions(resolutions);
-        
+
         const missingCategories = extractUnknownCategories(rows, categories);
         setUnknownCategories(missingCategories);
-        
+
         if (missingCategories.length > 0) {
             setStep("category-resolution");
         } else {
@@ -126,8 +126,8 @@ export function ImportCSVDialog({ categories, accounts }: ImportCSVDialogProps) 
         const finalAccRes = accResOverride || accountResolutions;
 
         const result = await importTransactions(
-            validTransactions, 
-            finalAccRes, 
+            validTransactions,
+            finalAccRes,
             catRes
         );
 
@@ -157,11 +157,22 @@ export function ImportCSVDialog({ categories, accounts }: ImportCSVDialogProps) 
                     Import
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-4xl">
+            <DialogContent
+                className="
+                    w-[calc(100vw-1rem)]
+                    max-w-[calc(100vw-1rem)]
+                    sm:max-w-4xl
+                    max-h-[90vh]
+                    overflow-y-auto
+                    overflow-x-hidden
+                    p-4
+                    sm:p-6
+                "
+            >
                 <DialogHeader>
                     <DialogTitle>Import Transactions</DialogTitle>
                 </DialogHeader>
-                <div className="py-2">
+                <div className="w-full min-w-0 py-2">
                     {step === "upload" && (
                         <CSVUploadStep
                             onFileAccepted={handleFileAccepted}
@@ -202,7 +213,7 @@ export function ImportCSVDialog({ categories, accounts }: ImportCSVDialogProps) 
                                     <p className="font-medium animate-pulse">Importing transactions...</p>
                                 </div>
                             )}
-                            <ResolutionStep 
+                            <ResolutionStep
                                 title="Categories"
                                 description="Some categories in your CSV do not match existing categories. Choose how to handle them."
                                 unknownAccounts={[]}

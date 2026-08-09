@@ -187,57 +187,71 @@ export default function TransactionTable({
             />
 
             {view === "table" && (
-                <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
+                <div className="hidden md:block">
                     {filteredTransactions.length === 0 ? (
-                        <TransactionEmptyState variant="filtered" />
+                        <TransactionEmptyState
+                            variant={
+                                transactions.length === 0
+                                    ? "empty"
+                                    : "filtered"
+                            }
+                        />
                     ) : (
-                        <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
+                        <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
                             <DataTable
-                                columns={columns(accountOptions, categoryOptions)}
+                                columns={columns(
+                                    accountOptions,
+                                    categoryOptions
+                                )}
                                 data={paginatedTransactions}
                             />
                         </div>
-                )}
+                    )}
                 </div>
             )}
 
             {view === "cards" && (
-                <div className="hidden gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
-                    {paginatedTransactions.map(
-                        (
-                            transaction
-                        ) => (
-                            <TransactionCard
-                                key={
-                                    transaction.id
-                                }
-                                transaction={
-                                    transaction
-                                }
-                                accountOptions={accountOptions}
-                                categoryOptions={categoryOptions}
-                            />
-                        )
+                <div className="hidden md:block">
+                    {filteredTransactions.length === 0 ? (
+                        <TransactionEmptyState
+                            variant={
+                                transactions.length === 0
+                                    ? "empty"
+                                    : "filtered"
+                            }
+                        />
+                    ) : (
+                        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                            {paginatedTransactions.map(
+                                (transaction) => (
+                                    <TransactionCard
+                                        key={transaction.id}
+                                        transaction={transaction}
+                                        accountOptions={accountOptions}
+                                        categoryOptions={categoryOptions}
+                                    />
+                                )
+                            )}
+                        </div>
                     )}
                 </div>
             )}
 
             <div className="space-y-4 md:hidden">
-                {paginatedTransactions.length ===
-                0 ? (
-                    <TransactionEmptyState variant="filtered" />
+                {filteredTransactions.length === 0 ? (
+                    <TransactionEmptyState
+                        variant={
+                            transactions.length === 0
+                                ? "empty"
+                                : "filtered"
+                        }
+                    />
                 ) : (
                     paginatedTransactions.map(
-                        (
-                            transaction
-                        ) => (
+                        (transaction) => (
                             <TransactionMobileCard
-                                key={
-                                    transaction.id
-                                }
-                                transaction={
-                                    transaction
-                                }
+                                key={transaction.id}
+                                transaction={transaction}
                                 accountOptions={accountOptions}
                                 categoryOptions={categoryOptions}
                             />
@@ -246,24 +260,26 @@ export default function TransactionTable({
                 )}
             </div>
 
-            <TransactionPagination
-                totalItems={
-                    filteredTransactions.length
-                }
-                currentPage={
-                    currentPage
-                }
-                pageSize={pageSize}
-                onPageChange={
-                    setCurrentPage
-                }
-                onPageSizeChange={(
-                    size
-                ) => {
-                    setPageSize(size);
-                    setCurrentPage(1);
-                }}
-            />
+            {filteredTransactions.length > 0 && (
+                <TransactionPagination
+                    totalItems={
+                        filteredTransactions.length
+                    }
+                    currentPage={
+                        currentPage
+                    }
+                    pageSize={pageSize}
+                    onPageChange={
+                        setCurrentPage
+                    }
+                    onPageSizeChange={(
+                        size
+                    ) => {
+                        setPageSize(size);
+                        setCurrentPage(1);
+                    }}
+                />
+            )}
         </div>
     );
 }

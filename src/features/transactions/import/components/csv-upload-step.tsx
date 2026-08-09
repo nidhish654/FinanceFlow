@@ -42,7 +42,7 @@ export function CSVUploadStep({ onFileAccepted, onCancel }: CSVUploadStepProps) 
 
     const handleDownloadSample = () => {
         const sampleCSV = `Date,Description,Category,Priority,Account,Credit,Debit,Merchant,Reference Number,Notes\n2026-08-01,Salary,Income,Need,ICICI Bank,50000,,Employer Inc.,REF12345,August Salary\n2026-08-02,Grocery Store,Groceries,Need,ICICI Bank,,1250.50,SuperMart,,Weekly groceries\n2026-08-05,Netflix Subscription,Entertainment,Want,ICICI Bank,,499,Netflix,,Monthly sub`;
-        
+
         const blob = new Blob([sampleCSV], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -56,9 +56,8 @@ export function CSVUploadStep({ onFileAccepted, onCancel }: CSVUploadStepProps) 
         <div className="space-y-6">
             {!selectedFile ? (
                 <div
-                    className={`border-2 border-dashed rounded-xl p-10 text-center flex flex-col items-center justify-center transition-colors duration-200 ${
-                        isDragging ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
-                    }`}
+                    className={`border-2 border-dashed rounded-xl p-10 text-center flex flex-col items-center justify-center transition-colors duration-200 ${isDragging ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                        }`}
                     onDragOver={(e) => {
                         e.preventDefault();
                         setIsDragging(true);
@@ -71,7 +70,7 @@ export function CSVUploadStep({ onFileAccepted, onCancel }: CSVUploadStepProps) 
                     </div>
                     <h3 className="text-lg font-semibold mb-1">Drag & Drop CSV</h3>
                     <p className="text-sm text-muted-foreground mb-6">or</p>
-                    
+
                     <label>
                         <Button variant="secondary" className="cursor-pointer" asChild>
                             <span>Choose File</span>
@@ -106,18 +105,44 @@ export function CSVUploadStep({ onFileAccepted, onCancel }: CSVUploadStepProps) 
                 </div>
             )}
 
-            <div className="flex items-center justify-between pt-4 border-t">
+            {/* <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button variant="ghost" onClick={handleDownloadSample} className="text-muted-foreground">
                     <Download className="mr-2 h-4 w-4" />
                     Download Sample CSV
                 </Button>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={onCancel}>Cancel</Button>
-                    <Button disabled={!selectedFile} onClick={() => selectedFile && onFileAccepted(selectedFile)}>
+                    <Button className="flex-1 sm:flex-none" disabled={!selectedFile} onClick={() => selectedFile && onFileAccepted(selectedFile)}>
+                        Continue
+                    </Button>
+                </div>
+            </div> */}
+            <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <Button
+                    onClick={handleDownloadSample}
+                    variant="ghost"
+                    className="w-full sm:w-auto text-muted-foreground"
+                >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Sample CSV
+                </Button>
+
+                <div className="flex w-full gap-2 sm:w-auto">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={onCancel}
+                        className="flex-1 sm:flex-none"
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button className="flex-1 sm:flex-none" disabled={!selectedFile} onClick={() => selectedFile && onFileAccepted(selectedFile)}>
                         Continue
                     </Button>
                 </div>
             </div>
+
         </div>
     );
 }
