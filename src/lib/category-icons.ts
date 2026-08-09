@@ -46,6 +46,11 @@ import {
     Hammer,
     Wrench,
     Paintbrush,
+    Zap,
+    Droplet,
+    HousePlug,
+    HouseWifi,
+    Bath,
 
     // Finance
     Wallet,
@@ -58,6 +63,17 @@ import {
     Calculator,
     TrendingUp,
     TrendingDown,
+    CircleEllipsis,
+    CircleDollarSign,
+    WalletCards,
+    ShieldCheck,
+    Shield,
+    BadgePercent,
+    Handshake,
+    UsersRound,
+    BanknoteArrowUp,
+    HandCoins,
+    ReceiptText,
 
     // Health
     HeartPulse,
@@ -66,6 +82,7 @@ import {
     Dumbbell,
     Hospital,
     Activity,
+    ShieldPlus,
 
     // Education
     GraduationCap,
@@ -80,6 +97,7 @@ import {
     Monitor,
     ClipboardList,
     Building,
+    Award,
 
     // Technology
     Smartphone,
@@ -96,6 +114,9 @@ import {
     Camera,
     Headphones,
     Popcorn,
+    Clapperboard,
+    TvMinimalPlay,
+
 
     // Travel
     Map,
@@ -103,12 +124,23 @@ import {
     Compass,
     Luggage,
     Ticket,
+    Tickets,
 
     // Lifestyle
     PawPrint,
     Baby,
     Flower2,
     Heart,
+    Scissors,
+    MirrorRound,
+    Sparkles,
+    Users,
+    Utensils,
+    Microwave,
+    Refrigerator,
+    CupSoda,
+    BriefcaseMedical,
+    IceCreamBowl,
 } from "lucide-react";
 
 export interface CategoryIcon {
@@ -131,6 +163,18 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 value: "utensils-crossed",
                 label: "Food",
                 icon: UtensilsCrossed,
+                keywords: [
+                    "restaurant",
+                    "meal",
+                    "lunch",
+                    "dinner",
+                    "breakfast",
+                ],
+            },
+            {
+                value: "utensils",
+                label: "Eating",
+                icon: Utensils,
                 keywords: [
                     "restaurant",
                     "meal",
@@ -232,6 +276,24 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 keywords: [
                     "drink",
                     "alcohol",
+                ],
+            },
+            {
+                value: "cup-soda",
+                label: "Drinks",
+                icon: CupSoda,
+                keywords: [
+                    "drink",
+                    "beverage",
+                ],
+            },
+            {
+                value: "ice-cream-bowl",
+                label: "Ice Cream",
+                icon: IceCreamBowl,
+                keywords: [
+                    "dessert",
+                    "sweet",
                 ],
             },
         ],
@@ -400,7 +462,7 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
         ],
     },
 
-        {
+    {
         title: "Home & Living",
         icons: [
             {
@@ -463,6 +525,48 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 icon: Paintbrush,
                 keywords: ["paint", "decorate"],
             },
+            {
+                value: "zap",
+                label: "Electricity",
+                icon: Zap,
+                keywords: ["power", "energy", "utility"],
+            },
+            {
+                value: "droplet",
+                label: "Water",
+                icon: Droplet,
+                keywords: ["water", "utility"],
+            },
+            {
+                value: "house-plug",
+                label: "House Plug",
+                icon: HousePlug,
+                keywords: ["house", "plug"],
+            },
+            {
+                value: "house-wifi",
+                label: "House Wifi",
+                icon: HouseWifi,
+                keywords: ["house", "wifi"],
+            },
+            {
+                value: "bath",
+                label: "Bath",
+                icon: Bath,
+                keywords: ["bath", "bathroom"],
+            },
+            {
+                value: "microwave",
+                label: "Microwave",
+                icon: Microwave,
+                keywords: ["microwave", "kitchen"],
+            },
+            {
+                value: "refrigerator",
+                label: "Refrigerator",
+                icon: Refrigerator,
+                keywords: ["refrigerator", "kitchen"],
+            },
         ],
     },
 
@@ -480,6 +584,12 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 label: "Cash",
                 icon: Banknote,
                 keywords: ["currency", "income"],
+            },
+            {
+                value: "banknote-arrow-up",
+                label: "Salary",
+                icon: BanknoteArrowUp,
+                keywords: ["salary", "income"],
             },
             {
                 value: "coins",
@@ -529,6 +639,66 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 icon: TrendingDown,
                 keywords: ["expense", "decline"],
             },
+            {
+                value: "circle-ellipsis",
+                label: "Other Expense",
+                icon: CircleEllipsis,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "circle-dollar-sign",
+                label: "Other Income",
+                icon: CircleDollarSign,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "wallet-cards",
+                label: "Wallet Cards",
+                icon: WalletCards,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "shield-check",
+                label: "Shield Check",
+                icon: ShieldCheck,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "shield",
+                label: "Shield",
+                icon: Shield,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "badge-percent",
+                label: "Badge Percent",
+                icon: BadgePercent,
+                keywords: ["insurance", "pension", "tax"],
+            },
+            {
+                value: "handshake",
+                label: "Handshake",
+                icon: Handshake,
+                keywords: ["Union", "Labour", "Collab"],
+            },
+            {
+                value: "users-round",
+                label: "Users Round",
+                icon: UsersRound,
+                keywords: ["users", "multiple", "personal"],
+            },
+            {
+                value: "hand-coins",
+                label: "Hand Coins",
+                icon: HandCoins,
+                keywords: ["miscellaneous", "general"],
+            },
+            {
+                value: "receipt-text",
+                label: "Receipt Text",
+                icon: ReceiptText,
+                keywords: ["miscellaneous", "general"],
+            },
         ],
     },
 
@@ -570,6 +740,18 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 label: "Gym",
                 icon: Dumbbell,
                 keywords: ["workout", "fitness"],
+            },
+            {
+                value: "shield-plus",
+                label: "Shield Plus",
+                icon: ShieldPlus,
+                keywords: ["medical", "insurance", "health"],
+            },
+            {
+                value: "breifcase-medical",
+                label: "Medical",
+                icon: BriefcaseMedical,
+                keywords: ["medical", "medicine", "health"],
             },
         ],
     },
@@ -643,6 +825,12 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 icon: ClipboardList,
                 keywords: ["tasks", "work"],
             },
+            {
+                value: "award",
+                label: "Award",
+                icon: Award,
+                keywords: ["award", "bonus", "performance"],
+            },
         ],
     },
 
@@ -682,7 +870,7 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
         ],
     },
 
-        {
+    {
         title: "Entertainment",
         icons: [
             {
@@ -727,6 +915,18 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 icon: Popcorn,
                 keywords: ["movies", "snacks"],
             },
+            {
+                value: "clapper-board",
+                label: "Clapper Board",
+                icon: Clapperboard,
+                keywords: ["movies", "cinema", "ott"],
+            },
+            {
+                value: "tv-minimal-play",
+                label: "TV",
+                icon: TvMinimalPlay,
+                keywords: ["television", "netflix", "ott", "watch"],
+            }
         ],
     },
 
@@ -759,9 +959,15 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
             },
             {
                 value: "ticket",
-                label: "Tickets",
+                label: "Ticket",
                 icon: Ticket,
                 keywords: ["booking", "events"],
+            },
+            {
+                value: "tickets",
+                label: "Tickets",
+                icon: Tickets,
+                keywords: ["booking", "events", "flight", "train", "bus"],
             },
         ],
     },
@@ -792,6 +998,30 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroup[] = [
                 label: "Personal",
                 icon: Heart,
                 keywords: ["love", "family", "relationship"],
+            },
+            {
+                value: "scissors",
+                label: "Salon",
+                icon: Scissors,
+                keywords: ["haircut", "beauty", "grooming"],
+            },
+            {
+                value: "mirror-round",
+                label: "Beauty",
+                icon: MirrorRound,
+                keywords: ["beauty", "makeup", "grooming"],
+            },
+            {
+                value: "sparkles",
+                label: "Skincare",
+                icon: Sparkles,
+                keywords: ["care", "skin", "skincare", "self", "therapy"],
+            },
+            {
+                value: "users",
+                label: "Friends",
+                icon: Users,
+                keywords: ["friends", "family", "relationship"],
             },
         ],
     },

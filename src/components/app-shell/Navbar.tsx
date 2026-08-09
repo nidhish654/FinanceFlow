@@ -41,7 +41,7 @@ export function Navbar({ userProfile }: { userProfile: UserProfileData | null })
 
             <div className="flex items-center gap-2">
                 <ThemeToggle />
-                <NotificationMenu />
+                {/* <NotificationMenu /> */}
                 <UserMenu userProfile={userProfile} />
             </div>
         </header>

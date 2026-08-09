@@ -22,7 +22,7 @@ export default function SummaryCard({
     return (
         <Card className="h-full">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-base font-medium text-muted-foreground">
                     {title}
                 </CardTitle>
 
@@ -33,9 +33,8 @@ export default function SummaryCard({
 
             <CardContent className="space-y-1">
                 <div
-                    className={`text-3xl font-bold tracking-tight ${
-                        valueClassName ?? ""
-                    }`}
+                    className={`text-2xl font-bold tracking-tight ${valueClassName ?? ""
+                        }`}
                 >
                     {value}
                 </div>

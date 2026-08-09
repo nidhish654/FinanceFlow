@@ -63,7 +63,7 @@ export default function DashboardSummaryCard({
 
                     <p
                         className="
-                            text-sm
+                            text-xm
                             font-medium
                             text-muted-foreground
                         "
@@ -88,7 +88,7 @@ export default function DashboardSummaryCard({
 
                     <h2
                         className="
-                            text-3xl
+                            text-2xl
                             font-bold
                             leading-none
                             tracking-tight
