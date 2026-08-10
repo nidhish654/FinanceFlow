@@ -34,12 +34,15 @@ export function buildBudgetAnalysis({
         // Find relevant expenses STRICTLY within the budget's own dates
         const expenses = transactions.filter((t) => {
             if (t.type !== "EXPENSE") return false;
-            
+
             const tDate = new Date(t.transactionDate);
             if (tDate < budgetStart || tDate > budgetEnd) return false;
 
             if (budget.categoryId) {
-                return t.categoryId === budget.categoryId;
+                return (
+                    t.categoryId === budget.categoryId ||
+                    t.category?.parent?.id === budget.categoryId
+                );
             }
             return true; // Overall budget
         });

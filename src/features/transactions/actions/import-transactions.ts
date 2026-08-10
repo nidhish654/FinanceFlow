@@ -194,16 +194,22 @@ export async function importTransactions(
                                 : CategoryType.EXPENSE;
 
                         const newCategory =
-                            await tx.category.create(
-                                {
-                                    data: {
-                                        name: resolution.newName,
-                                        type: categoryType,
-                                        financeProfileId:
-                                            activeProfile.id,
-                                    },
-                                }
-                            );
+                            await tx.category.create({
+                                data: {
+                                    name: resolution.newName,
+                                    description:
+                                        resolution.newDescription?.trim() ||
+                                        null,
+                                    icon:
+                                        resolution.newIcon?.trim() ||
+                                        "Tag",
+                                    color: null,
+                                    type: categoryType,
+                                    financeProfileId:
+                                        activeProfile.id,
+                                    isDefault: false,
+                                },
+                            });
 
                         categoryMap.set(
                             normalize(csvName),

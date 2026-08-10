@@ -70,17 +70,28 @@ export async function createCategory(
 
     let categoryType = data.type;
 
+    let categoryIcon = data.icon || null;
+    let categoryColor = data.color || null;
+
     if (data.parentCategoryId) {
         const parent = await prisma.category.findUnique({
-            where: { id: data.parentCategoryId }
+            where: {
+                id: data.parentCategoryId,
+            },
         });
+
         if (!parent) {
             return {
                 success: false,
-                message: "Parent category not found."
+                message: "Parent category not found.",
             };
         }
+
+        // Subcategories always inherit the parent's
+        // type, icon, and color.
         categoryType = parent.type;
+        categoryIcon = parent.icon;
+        categoryColor = parent.color;
     }
 
     await prisma.category.create({
@@ -97,11 +108,9 @@ export async function createCategory(
 
             parentCategoryId: data.parentCategoryId || null,
 
-            icon:
-                data.icon || null,
+            icon: categoryIcon,
 
-            color:
-                data.color || null,
+            color: categoryColor,
 
             displayOrder:
                 (maxDisplayOrder._max

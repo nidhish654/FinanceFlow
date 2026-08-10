@@ -47,9 +47,10 @@ export function getBudgetViews({
                 }
 
                 // Category Budget
+                // Category Budget
                 return (
-                    transaction.categoryId ===
-                    budget.categoryId
+                    transaction.categoryId === budget.categoryId ||
+                    transaction.category?.parent?.id === budget.categoryId
                 );
             });
 

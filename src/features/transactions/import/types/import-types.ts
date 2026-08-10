@@ -1,6 +1,9 @@
 import { ImportTransaction } from "../schemas/import-schema";
 
-export type ImportRowStatus = "valid" | "warning" | "error";
+export type ImportRowStatus =
+    | "valid"
+    | "warning"
+    | "error";
 
 export interface ParsedImportRow {
     originalIndex: number;
@@ -12,22 +15,28 @@ export interface ParsedImportRow {
 }
 
 export interface ResolutionMap {
-    [csvName: string]: {
-        type: "create" | "existing";
-        newName?: string; // If creating
-        existingId?: string; // If mapping to existing
-        transactionType?: "income" | "expense"; // Passed explicitly for categories
+    [csvName: string]:
+    | {
+        type: "create";
+        newName: string;
+        newDescription?: string;
+        newIcon: string;
+        transactionType?: "income" | "expense";
+    }
+    | {
+        type: "existing";
+        existingId: string;
+        transactionType?: "income" | "expense";
     };
 }
 
 export interface UnknownAccount {
     csvName: string;
-    matchedAccountId?: string; // If we found a high-confidence match
+    matchedAccountId?: string;
 }
 
 export interface UnknownCategory {
     csvName: string;
     transactionType: "income" | "expense";
-    matchedCategoryId?: string; // If we found a high-confidence match
+    matchedCategoryId?: string;
 }
-

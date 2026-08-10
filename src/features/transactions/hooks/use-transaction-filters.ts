@@ -79,11 +79,21 @@ export function useTransactionFilters({
 
             // Category
 
-            if (
-                category !== "all" &&
-                transaction.category?.id !== category
-            ) {
-                return false;
+            // Category
+            if (category !== "all") {
+                const transactionCategory = transaction.category;
+
+                if (!transactionCategory) {
+                    return false;
+                }
+
+                const matchesCategory =
+                    transactionCategory.id === category ||
+                    transactionCategory.parent?.id === category;
+
+                if (!matchesCategory) {
+                    return false;
+                }
             }
 
             // Account
