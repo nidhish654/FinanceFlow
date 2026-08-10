@@ -94,7 +94,7 @@ export default function IncomeExpenseChart({
                                 Number(value),
                                 currency
                             ),
-                            name === "income"
+                            name === "Income"
                                 ? "Income"
                                 : "Expense",
                         ]}
