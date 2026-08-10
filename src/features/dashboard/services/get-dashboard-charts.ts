@@ -7,8 +7,13 @@ import {
     CategoryChartPoint,
     CashFlowChartPoint,
 } from "../types/dashboard-view";
+
 import { SettingsState } from "@/features/settings/types/settings";
-import { getFinancialMonthRange, getFiscalYearRange } from "@/lib/finance/financial-period";
+
+import {
+    getFinancialMonthRange,
+    getFiscalYearRange,
+} from "@/lib/finance/financial-period";
 
 interface GetDashboardChartsParams {
     transactions: TransactionDto[];
@@ -20,13 +25,32 @@ export function getDashboardCharts({
     settings,
 }: GetDashboardChartsParams): DashboardCharts {
     const now = new Date();
-    const monthStart = settings?.monthStart || 1;
-    const fiscalStartMonth = settings?.fiscalYear || "JANUARY";
 
-    const currentFiscalYear = getFiscalYearRange(now, fiscalStartMonth, monthStart);
+    const monthStart =
+        settings?.monthStart || 1;
+
+    const fiscalStartMonth =
+        settings?.fiscalYear || "JANUARY";
+
+    const currentFiscalYear =
+        getFiscalYearRange(
+            now,
+            fiscalStartMonth,
+            monthStart
+        );
+
+    const currentFinancialMonth =
+        getFinancialMonthRange(
+            now,
+            monthStart
+        );
 
     /* ========================================
      * Expense By Category
+     *
+     * IMPORTANT:
+     * This chart represents the CURRENT
+     * FINANCIAL MONTH, not the fiscal year.
      * ====================================== */
 
     const expenseCategoryMap =
@@ -41,9 +65,11 @@ export function getDashboardCharts({
 
             return (
                 transaction.type ===
-                    TransactionType.EXPENSE &&
-                date.getTime() >= currentFiscalYear.start.getTime() &&
-                date.getTime() <= currentFiscalYear.end.getTime() &&
+                TransactionType.EXPENSE &&
+                date.getTime() >=
+                currentFinancialMonth.start.getTime() &&
+                date.getTime() <=
+                currentFinancialMonth.end.getTime() &&
                 transaction.category
             );
         })
@@ -70,7 +96,8 @@ export function getDashboardCharts({
 
                 color:
                     transaction.category!
-                        .color ?? "#94A3B8",
+                        .color ??
+                    "#94A3B8",
 
                 amount:
                     transaction.amount,
@@ -87,6 +114,10 @@ export function getDashboardCharts({
 
     /* ========================================
      * Monthly Income vs Expense
+     *
+     * This continues to use the fiscal year
+     * and displays the financial months within
+     * that fiscal year.
      * ====================================== */
 
     const incomeVsExpense =
@@ -95,9 +126,24 @@ export function getDashboardCharts({
                 length: 12,
             },
             (_, monthOffset) => {
-                const targetDate = new Date(currentFiscalYear.start);
-                targetDate.setMonth(targetDate.getMonth() + monthOffset);
-                const { start, end } = getFinancialMonthRange(targetDate, monthStart);
+                const targetDate =
+                    new Date(
+                        currentFiscalYear.start
+                    );
+
+                targetDate.setMonth(
+                    targetDate.getMonth() +
+                    monthOffset
+                );
+
+                const {
+                    start,
+                    end,
+                } =
+                    getFinancialMonthRange(
+                        targetDate,
+                        monthStart
+                    );
 
                 const monthTransactions =
                     transactions.filter(
@@ -108,8 +154,10 @@ export function getDashboardCharts({
                                 );
 
                             return (
-                                date.getTime() >= start.getTime() &&
-                                date.getTime() <= end.getTime()
+                                date.getTime() >=
+                                start.getTime() &&
+                                date.getTime() <=
+                                end.getTime()
                             );
                         }
                     );
@@ -117,9 +165,7 @@ export function getDashboardCharts({
                 const income =
                     monthTransactions
                         .filter(
-                            (
-                                transaction
-                            ) =>
+                            (transaction) =>
                                 transaction.type ===
                                 TransactionType.INCOME
                         )
@@ -136,9 +182,7 @@ export function getDashboardCharts({
                 const expense =
                     monthTransactions
                         .filter(
-                            (
-                                transaction
-                            ) =>
+                            (transaction) =>
                                 transaction.type ===
                                 TransactionType.EXPENSE
                         )
@@ -157,8 +201,7 @@ export function getDashboardCharts({
                         start.toLocaleString(
                             "en-US",
                             {
-                                month:
-                                    "short",
+                                month: "short",
                             }
                         ),
 
@@ -176,32 +219,60 @@ export function getDashboardCharts({
     let runningBalance = 0;
 
     const cashFlowTrend =
-        incomeVsExpense.map(
-            (
-                month
-            ): CashFlowChartPoint => {
-                runningBalance +=
-                    month.income -
-                    month.expense;
+        incomeVsExpense
+            .map(
+                (
+                    month
+                ): CashFlowChartPoint => {
+                    runningBalance +=
+                        month.income -
+                        month.expense;
 
-                return {
-                    month:
-                        month.month,
+                    return {
+                        month:
+                            month.month,
 
-                    balance:
-                        runningBalance,
-                };
-            }
-        )
-        // Future months are not a forecast. Showing them creates a misleading
-        // flat line after the latest real financial activity.
-        .filter((_, index) => {
-            const targetDate = new Date(currentFiscalYear.start);
-            targetDate.setMonth(targetDate.getMonth() + index);
-            const { start } = getFinancialMonthRange(targetDate, monthStart);
-            const { start: currentStart } = getFinancialMonthRange(now, monthStart);
-            return start.getTime() <= currentStart.getTime();
-        });
+                        balance:
+                            runningBalance,
+                    };
+                }
+            )
+            // Future months are not a forecast.
+            // Showing them creates a misleading
+            // flat line after the latest real
+            // financial activity.
+            .filter((_, index) => {
+                const targetDate =
+                    new Date(
+                        currentFiscalYear.start
+                    );
+
+                targetDate.setMonth(
+                    targetDate.getMonth() +
+                    index
+                );
+
+                const {
+                    start,
+                } =
+                    getFinancialMonthRange(
+                        targetDate,
+                        monthStart
+                    );
+
+                const {
+                    start: currentStart,
+                } =
+                    getFinancialMonthRange(
+                        now,
+                        monthStart
+                    );
+
+                return (
+                    start.getTime() <=
+                    currentStart.getTime()
+                );
+            });
 
     return {
         expenseByCategory,
