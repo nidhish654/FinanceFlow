@@ -91,7 +91,7 @@ export default function ExpenseCategoryChart({
             title="Expenses by Category"
             description="Breakdown of expenses by category."
         >
-            <div className="grid h-full grid-rows-[180px_minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(220px,1.1fr)] md:grid-rows-1 md:items-center">
+            <div className="grid h-full grid-rows-[180px_minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(220px,1.1fr)] md:grid-rows-1 md:items-center overflow-y-auto">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
